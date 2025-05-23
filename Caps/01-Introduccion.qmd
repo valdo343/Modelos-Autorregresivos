@@ -1,0 +1,84 @@
+
+
+# Introducción al Análisis de Series de Tiempo
+
+El análisis de series de tiempo es una disciplina estadística clave para
+estudiar fenómenos dinámicos que evolucionan a lo largo del tiempo.
+Desde variables económicas como la **inflación** y la **producción
+industrial**, hasta métricas ambientales como las **temperaturas
+globales** o el **tráfico en redes informáticas**, las series de tiempo
+permiten desentrañar patrones temporales —como tendencias,
+estacionalidad o ciclos— que son críticos para la toma de decisiones
+basada en datos.
+
+## Modelos Fundamentales en Series de Tiempo
+
+### 1. **Modelos Autorregresivos (AR)**
+
+Los modelos AR(p) suponen que el valor actual de una serie ($x_t$)
+depende linealmente de sus $p$ valores pasados:\
+$$
+x_t = \alpha_1 x_{t-1} + \alpha_2 x_{t-2} + \ldots + \alpha_p x_{t-p} + \varepsilon_t,
+$$\
+donde $\varepsilon_t$ es ruido blanco. Son ideales para capturar
+dependencias secuenciales en datos estacionarios.
+
+### 2. **Modelos de Media Móvil (MA)**
+
+Los modelos MA(q) relacionan el valor actual con **errores pasados**:\
+$$
+x_t = \varepsilon_t + \beta_1 \varepsilon_{t-1} + \beta_2 \varepsilon_{t-2} + \ldots + \beta_q \varepsilon_{t-q}.
+$$\
+Estos modelos son útiles para describir impactos temporales de eventos
+aleatorios.
+
+### 3. **Modelos ARMA: Combinando lo Mejor de AR y MA**
+
+Los modelos **ARMA(p, q)** integran componentes autorregresivos y de
+media móvil:\
+$$
+x_t = \sum_{i=1}^p \alpha_i x_{t-i} + \varepsilon_t + \sum_{j=1}^q \beta_j \varepsilon_{t-j}.
+$$\
+Son eficaces para series **estacionarias** con patrones mixtos de
+dependencia.
+
+### 4. **Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias**
+
+Los modelos **ARIMA(p, d, q)** aplican diferenciación (orden $d$) para
+convertir series no estacionarias en estacionarias antes de usar ARMA:\
+$$
+(1 - B)^d x_t = \varepsilon_t + \sum_{i=1}^p \alpha_i (1 - B)^d x_{t-i} + \sum_{j=1}^q \beta_j \varepsilon_{t-j},
+$$\
+donde $B$ es el operador de desplazamiento hacia atrás. Son esenciales
+para manejar tendencias o varianzas variables.
+
+------------------------------------------------------------------------
+
+## Objetivo y Estructura del Documento
+
+Este documento profundiza en estos modelos, combinando el rigor teórico
+de **Montgomery, Jennings y Kulahci (2008)** con las implementaciones
+prácticas de **Cowpertwait y Metcalfe (2009)**. La exposición se
+organiza en cuatro pilares:
+
+1.  **Fundamentos Teóricos**
+    -   Estacionariedad, pruebas de Dickey-Fuller y herramientas
+        diagnósticas (ACF, PACF).\
+2.  **Formulación Matemática**
+    -   Ecuaciones y propiedades de modelos AR, MA, ARMA y ARIMA.\
+3.  **Estimación y Validación**
+    -   Métodos de máxima verosimilitud, criterios de información
+        (AIC/BIC) y diagnóstico de residuos.\
+4.  **Aplicaciones Prácticas**
+    -   Casos de estudio en finanzas (pronóstico de precios), logística
+        (demanda de inventario) y climatología.
+
+------------------------------------------------------------------------
+
+## Relevancia en la Era de los Datos
+
+Los modelos de series de tiempo no solo son herramientas académicas: son
+pilares en **predicción de mercados financieros**, **gestión de recursos
+energéticos** y **monitoreo de cambio climático**. Su capacidad para
+descomponer complejidad temporal en componentes interpretables los hace
+indispensables en un mundo impulsado por datos dinámicos.
