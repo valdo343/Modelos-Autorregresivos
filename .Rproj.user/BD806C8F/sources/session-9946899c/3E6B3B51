@@ -3,7 +3,7 @@
     "path": "~/CIMAT/Clases/Semestre 2/Modelos Estadísticos I/Edruan/RegresionNoLineal/ModelosAutoregresivos/_quarto.yml",
     "project_path": "_quarto.yml",
     "type": "yaml",
-    "hash": "0",
+    "hash": "377908500",
     "contents": "",
     "dirty": false,
     "created": 1747858647354.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "12,53",
+        "cursorPosition": "8,20",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747957033,
+    "lastKnownWriteTime": 1747978244,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747957033142,
+    "last_content_update": 1747978244068,
     "read_only": false,
     "read_only_alternatives": []
 }

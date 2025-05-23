@@ -3,7 +3,7 @@
     "path": "~/CIMAT/Clases/Semestre 2/Modelos Estadísticos I/Edruan/RegresionNoLineal/ModelosAutoregresivos/Caps/03-Modelos lineales para series de tiempo estacionarias.qmd",
     "project_path": "Caps/03-Modelos lineales para series de tiempo estacionarias.qmd",
     "type": "quarto_markdown",
-    "hash": "828638551",
+    "hash": "699442543",
     "contents": "",
     "dirty": false,
     "created": 1747956102654.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "1,0",
-        "scrollLine": "0",
+        "cursorPosition": "121,2",
+        "scrollLine": "115",
         "rmdVisualMode": "false",
         "rmdVisualWrapConfigured": "true",
         "docOutlineVisible": "1",
@@ -22,11 +22,11 @@
         "docOutlineSize": "149"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747973961,
+    "lastKnownWriteTime": 1747977892,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747973961096,
+    "last_content_update": 1747977892616,
     "read_only": false,
     "read_only_alternatives": []
 }

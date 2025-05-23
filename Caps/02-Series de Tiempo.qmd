@@ -1,4 +1,4 @@
-# Capítulo 1: Series de Tiempo
+# Series de Tiempo
 
 ## ¿Qué es una Serie de Tiempo?
 
@@ -213,11 +213,7 @@ $$
 - La serie fluctúa alrededor de una media constante $\mu$.\
 - Ejemplo: Temperatura promedio mensual en una región estable.
 
-#### grafica perrona
-
-*Figura 1: Serie con media constante (*$\mu = 50$) y ruido blanco ($\sigma = 5$).
-
-#### 2. Tendencia Lineal con Ruido Blanco
+#### Tendencia Lineal con Ruido Blanco
 
 **Modelo**:\
 $$
@@ -232,10 +228,6 @@ $$
 **Interpretación**:\
 - La media de la serie crece/decrece linealmente con el tiempo.\
 - Ejemplo: Ventas anuales de un producto en expansión.
-
-#### grafica perrona
-
-*Figura 2: Serie con tendencia lineal (*$\beta = 2.5$) y ruido blanco ($\sigma = 10$).
 
 ### Propiedades Clave
 
@@ -288,7 +280,6 @@ La **distribución conjunta** de $(Y_t, Y_{t-1}, \ldots, Y_{t-j})$ permite deriv
     $$\
     Es la **varianza** de la serie, es decir, la dispersión de $Y_t$ alrededor de su media.
 
-#### Ejemplo
 
 ------------------------------------------------------------------------
 
@@ -404,7 +395,6 @@ La PACF es crítica en modelos autorregresivos (AR). Por ejemplo, en un proceso 
 - La PACF tiene cortes abruptos en el retardo $p$.\
 - Los valores significativos en $\text{PACF}(k)$ para $k \leq p$ ayudan a determinar el orden del modelo.
 
-#### Ejemplo Gráfico
 
 ------------------------------------------------------------------------
 
@@ -487,7 +477,6 @@ Este valor representa la autocorrelación parcial en el retardo 2, crucial para 
 ### Aplicación en Identificación de Modelos
 
 -   **Corte en la PACF**: En procesos AR(p), la PACF tiene valores significativos hasta el retardo $p$ y luego cae abruptamente.\
--   **Ejemplo Gráfico**:
 
 Esta metodología es fundamental para seleccionar órdenes en modelos autorregresivos y validar supuestos de estacionariedad.
 

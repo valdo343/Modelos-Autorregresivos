@@ -1,6 +1,6 @@
 
 
-# Introducción al Análisis de Series de Tiempo
+# Introducción
 
 El análisis de series de tiempo es una disciplina estadística clave para
 estudiar fenómenos dinámicos que evolucionan a lo largo del tiempo.
@@ -13,7 +13,7 @@ basada en datos.
 
 ## Modelos Fundamentales en Series de Tiempo
 
-### 1. **Modelos Autorregresivos (AR)**
+### **Modelos Autorregresivos (AR)**
 
 Los modelos AR(p) suponen que el valor actual de una serie ($x_t$)
 depende linealmente de sus $p$ valores pasados:\
@@ -23,7 +23,7 @@ $$\
 donde $\varepsilon_t$ es ruido blanco. Son ideales para capturar
 dependencias secuenciales en datos estacionarios.
 
-### 2. **Modelos de Media Móvil (MA)**
+### **Modelos de Media Móvil (MA)**
 
 Los modelos MA(q) relacionan el valor actual con **errores pasados**:\
 $$
@@ -32,7 +32,7 @@ $$\
 Estos modelos son útiles para describir impactos temporales de eventos
 aleatorios.
 
-### 3. **Modelos ARMA: Combinando lo Mejor de AR y MA**
+### **Modelos ARMA: Combinando lo Mejor de AR y MA**
 
 Los modelos **ARMA(p, q)** integran componentes autorregresivos y de
 media móvil:\
@@ -42,7 +42,7 @@ $$\
 Son eficaces para series **estacionarias** con patrones mixtos de
 dependencia.
 
-### 4. **Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias**
+### **Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias**
 
 Los modelos **ARIMA(p, d, q)** aplican diferenciación (orden $d$) para
 convertir series no estacionarias en estacionarias antes de usar ARMA:\

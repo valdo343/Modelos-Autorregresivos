@@ -3,7 +3,7 @@
     "path": "~/CIMAT/Clases/Semestre 2/Modelos Estadísticos I/Edruan/RegresionNoLineal/ModelosAutoregresivos/Caps/02-Series de Tiempo.qmd",
     "project_path": "Caps/02-Series de Tiempo.qmd",
     "type": "quarto_markdown",
-    "hash": "2686548030",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1747955995273.0,
@@ -12,15 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "189,159",
-        "scrollLine": "189"
+        "cursorPosition": "96,29",
+        "scrollLine": "80",
+        "docOutlineVisible": "1"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747974705,
+    "lastKnownWriteTime": 1747976877,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747974705406,
+    "last_content_update": 1747976877321,
     "read_only": false,
     "read_only_alternatives": []
 }

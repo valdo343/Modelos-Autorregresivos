@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Modelos lineales para series de tiempo estacionarias – Modelos Autoregresivos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Caps/04-Ajuste del modelo a una serie de tiempo.html" rel="next">
+<link href="../Caps/02-Series de Tiempo.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8da5b4427184b79ecddefad3d342027e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Caps/03-Modelos lineales para series de tiempo estacionarias.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelos lineales para series de tiempo estacionarias</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Modelos Autoregresivos</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Presentación</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/01-Introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/02-Series de Tiempo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/03-Modelos lineales para series de tiempo estacionarias.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelos lineales para series de tiempo estacionarias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/04-Ajuste del modelo a una serie de tiempo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ajuste del modelo a una serie de tiempo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/05-Caso de estudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Casos de Estudios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referencias</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#procesos-de-media-movil-ma" id="toc-procesos-de-media-movil-ma" class="nav-link active" data-scroll-target="#procesos-de-media-movil-ma"><span class="header-section-number">3.1</span> Procesos de Media Movil (MA)</a>
+  <ul class="collapse">
+  <li><a href="#propiedades" id="toc-propiedades" class="nav-link" data-scroll-target="#propiedades"><span class="header-section-number">3.1.1</span> Propiedades:</a></li>
+  <li><a href="#modelización-con-ma2" id="toc-modelización-con-ma2" class="nav-link" data-scroll-target="#modelización-con-ma2"><span class="header-section-number">3.1.2</span> Modelización con MA(2)</a></li>
+  </ul></li>
+  <li><a href="#características-de-los-modelos-maq" id="toc-características-de-los-modelos-maq" class="nav-link" data-scroll-target="#características-de-los-modelos-maq"><span class="header-section-number">3.2</span> Características de los Modelos MA(q)</a>
+  <ul class="collapse">
+  <li><a href="#valor-esperado" id="toc-valor-esperado" class="nav-link" data-scroll-target="#valor-esperado"><span class="header-section-number">3.2.1</span> Valor esperado</a></li>
+  <li><a href="#varianza" id="toc-varianza" class="nav-link" data-scroll-target="#varianza"><span class="header-section-number">3.2.2</span> Varianza</a></li>
+  <li><a href="#implicaciones-clave" id="toc-implicaciones-clave" class="nav-link" data-scroll-target="#implicaciones-clave"><span class="header-section-number">3.2.3</span> Implicaciones clave</a></li>
+  </ul></li>
+  <li><a href="#función-de-autocovarianza-de-los-modelos-maq" id="toc-función-de-autocovarianza-de-los-modelos-maq" class="nav-link" data-scroll-target="#función-de-autocovarianza-de-los-modelos-maq"><span class="header-section-number">3.3</span> Función de autocovarianza de los modelos MA(q)</a>
+  <ul class="collapse">
+  <li><a href="#autocovarianza-de-un-proceso-maq" id="toc-autocovarianza-de-un-proceso-maq" class="nav-link" data-scroll-target="#autocovarianza-de-un-proceso-maq"><span class="header-section-number">3.3.1</span> Autocovarianza de un proceso MA(q)</a></li>
+  <li><a href="#autocorrelación-de-un-proceso-maq" id="toc-autocorrelación-de-un-proceso-maq" class="nav-link" data-scroll-target="#autocorrelación-de-un-proceso-maq"><span class="header-section-number">3.3.2</span> Autocorrelación de un proceso MA(q)</a></li>
+  <li><a href="#casos-particulares" id="toc-casos-particulares" class="nav-link" data-scroll-target="#casos-particulares"><span class="header-section-number">3.3.3</span> Casos particulares</a></li>
+  </ul></li>
+  <li><a href="#ma-de-orden-infinito" id="toc-ma-de-orden-infinito" class="nav-link" data-scroll-target="#ma-de-orden-infinito"><span class="header-section-number">3.4</span> MA de orden infinito</a>
+  <ul class="collapse">
+  <li><a href="#componentes-clave" id="toc-componentes-clave" class="nav-link" data-scroll-target="#componentes-clave"><span class="header-section-number">3.4.1</span> Componentes clave:</a></li>
+  <li><a href="#características-principales" id="toc-características-principales" class="nav-link" data-scroll-target="#características-principales"><span class="header-section-number">3.4.2</span> Características principales:</a></li>
+  </ul></li>
+  <li><a href="#características-de-los-procesos-mainfty" id="toc-características-de-los-procesos-mainfty" class="nav-link" data-scroll-target="#características-de-los-procesos-mainfty"><span class="header-section-number">3.5</span> Características de los procesos MA(infty)</a>
+  <ul class="collapse">
+  <li><a href="#valor-esperado-1" id="toc-valor-esperado-1" class="nav-link" data-scroll-target="#valor-esperado-1"><span class="header-section-number">3.5.1</span> Valor esperado</a></li>
+  <li><a href="#varianza-1" id="toc-varianza-1" class="nav-link" data-scroll-target="#varianza-1"><span class="header-section-number">3.5.2</span> Varianza</a></li>
+  </ul></li>
+  <li><a href="#importancia-de-los-procesos-ma" id="toc-importancia-de-los-procesos-ma" class="nav-link" data-scroll-target="#importancia-de-los-procesos-ma"><span class="header-section-number">3.6</span> Importancia de los procesos MA(∞)</a>
+  <ul class="collapse">
+  <li><a href="#teorema-de-wold-la-base-teórica" id="toc-teorema-de-wold-la-base-teórica" class="nav-link" data-scroll-target="#teorema-de-wold-la-base-teórica"><span class="header-section-number">3.6.1</span> Teorema de Wold: La base teórica</a></li>
+  <li><a href="#casos-especiales-de-la-representación-ma" id="toc-casos-especiales-de-la-representación-ma" class="nav-link" data-scroll-target="#casos-especiales-de-la-representación-ma"><span class="header-section-number">3.6.2</span> Casos especiales de la representación MA(∞)</a></li>
+  </ul></li>
+  <li><a href="#procesos-de-autorregresión-de-orden-1-ar" id="toc-procesos-de-autorregresión-de-orden-1-ar" class="nav-link" data-scroll-target="#procesos-de-autorregresión-de-orden-1-ar"><span class="header-section-number">3.7</span> Procesos de autorregresión de orden 1 (AR)</a>
+  <ul class="collapse">
+  <li><a href="#condición-de-estacionariedad" id="toc-condición-de-estacionariedad" class="nav-link" data-scroll-target="#condición-de-estacionariedad"><span class="header-section-number">3.7.1</span> Condición de Estacionariedad</a></li>
+  <li><a href="#propiedades-estadísticas" id="toc-propiedades-estadísticas" class="nav-link" data-scroll-target="#propiedades-estadísticas"><span class="header-section-number">3.7.2</span> Propiedades Estadísticas</a></li>
+  <li><a href="#representación-ma-bajo-estacionariedad" id="toc-representación-ma-bajo-estacionariedad" class="nav-link" data-scroll-target="#representación-ma-bajo-estacionariedad"><span class="header-section-number">3.7.3</span> Representación MA(∞) bajo estacionariedad</a></li>
+  <li><a href="#componentes-clave-de-la-representación" id="toc-componentes-clave-de-la-representación" class="nav-link" data-scroll-target="#componentes-clave-de-la-representación"><span class="header-section-number">3.7.4</span> Componentes clave de la representación:</a></li>
+  </ul></li>
+  <li><a href="#características-de-los-procesos-ar1" id="toc-características-de-los-procesos-ar1" class="nav-link" data-scroll-target="#características-de-los-procesos-ar1"><span class="header-section-number">3.8</span> Características de los procesos AR(1)</a>
+  <ul class="collapse">
+  <li><a href="#valor-esperado-2" id="toc-valor-esperado-2" class="nav-link" data-scroll-target="#valor-esperado-2"><span class="header-section-number">3.8.1</span> Valor esperado</a></li>
+  <li><a href="#varianza-3" id="toc-varianza-3" class="nav-link" data-scroll-target="#varianza-3"><span class="header-section-number">3.8.2</span> Varianza</a></li>
+  </ul></li>
+  <li><a href="#función-de-autocovarianza-de-los-procesos-ar1" id="toc-función-de-autocovarianza-de-los-procesos-ar1" class="nav-link" data-scroll-target="#función-de-autocovarianza-de-los-procesos-ar1"><span class="header-section-number">3.9</span> Función de autocovarianza de los procesos AR(1)</a>
+  <ul class="collapse">
+  <li><a href="#autocovarianza-gamma_j" id="toc-autocovarianza-gamma_j" class="nav-link" data-scroll-target="#autocovarianza-gamma_j"><span class="header-section-number">3.9.1</span> Autocovarianza (<span class="math inline">\(\gamma_j\)</span>)</a></li>
+  <li><a href="#autocorrelación-rho_j" id="toc-autocorrelación-rho_j" class="nav-link" data-scroll-target="#autocorrelación-rho_j"><span class="header-section-number">3.9.2</span> Autocorrelación (<span class="math inline">\(\rho_j\)</span>)</a></li>
+  </ul></li>
+  <li><a href="#procesos-de-autorregresión-de-orden-p" id="toc-procesos-de-autorregresión-de-orden-p" class="nav-link" data-scroll-target="#procesos-de-autorregresión-de-orden-p"><span class="header-section-number">3.10</span> Procesos de autorregresión de orden p</a>
+  <ul class="collapse">
+  <li><a href="#estacionariedad-de-procesos-arp" id="toc-estacionariedad-de-procesos-arp" class="nav-link" data-scroll-target="#estacionariedad-de-procesos-arp"><span class="header-section-number">3.10.1</span> Estacionariedad de procesos AR(p)</a></li>
+  <li><a href="#comportamiento-de-los-correlogramas" id="toc-comportamiento-de-los-correlogramas" class="nav-link" data-scroll-target="#comportamiento-de-los-correlogramas"><span class="header-section-number">3.10.2</span> Comportamiento de los correlogramas</a></li>
+  <li><a href="#condición-de-invertibilidad" id="toc-condición-de-invertibilidad" class="nav-link" data-scroll-target="#condición-de-invertibilidad"><span class="header-section-number">3.10.3</span> Condición de Invertibilidad</a></li>
+  <li><a href="#expansión-en-serie-de-potencias" id="toc-expansión-en-serie-de-potencias" class="nav-link" data-scroll-target="#expansión-en-serie-de-potencias"><span class="header-section-number">3.10.4</span> Expansión en Serie de Potencias</a></li>
+  <li><a href="#estacionariedad-de-los-procesos-arp" id="toc-estacionariedad-de-los-procesos-arp" class="nav-link" data-scroll-target="#estacionariedad-de-los-procesos-arp"><span class="header-section-number">3.10.5</span> Estacionariedad de los procesos AR(p)</a></li>
+  <li><a href="#condición-sobre-las-raíces-del-polinomio-característico" id="toc-condición-sobre-las-raíces-del-polinomio-característico" class="nav-link" data-scroll-target="#condición-sobre-las-raíces-del-polinomio-característico"><span class="header-section-number">3.10.6</span> Condición sobre las raíces del polinomio característico</a></li>
+  <li><a href="#relación-con-procesos-mainfty" id="toc-relación-con-procesos-mainfty" class="nav-link" data-scroll-target="#relación-con-procesos-mainfty"><span class="header-section-number">3.10.7</span> Relación con procesos MA(<span class="math inline">\(\infty\)</span>)</a></li>
+  <li><a href="#estacionariedad" id="toc-estacionariedad" class="nav-link" data-scroll-target="#estacionariedad"><span class="header-section-number">3.10.8</span> Estacionariedad</a></li>
+  </ul></li>
+  <li><a href="#procesos-autorregresivos-media-móvil-armap-q" id="toc-procesos-autorregresivos-media-móvil-armap-q" class="nav-link" data-scroll-target="#procesos-autorregresivos-media-móvil-armap-q"><span class="header-section-number">3.11</span> Procesos Autorregresivos-Media Móvil (ARMA(p, q))</a>
+  <ul class="collapse">
+  <li><a href="#estacionariedad-1" id="toc-estacionariedad-1" class="nav-link" data-scroll-target="#estacionariedad-1"><span class="header-section-number">3.11.1</span> Estacionariedad</a></li>
+  <li><a href="#comportamiento-de-los-correlogramas-1" id="toc-comportamiento-de-los-correlogramas-1" class="nav-link" data-scroll-target="#comportamiento-de-los-correlogramas-1"><span class="header-section-number">3.11.2</span> Comportamiento de los correlogramas</a></li>
+  <li><a href="#representación-ma-de-un-proceso-armap-q" id="toc-representación-ma-de-un-proceso-armap-q" class="nav-link" data-scroll-target="#representación-ma-de-un-proceso-armap-q"><span class="header-section-number">3.11.3</span> Representación MA(∞) de un proceso ARMA(p, q)</a></li>
+  <li><a href="#condición-de-estacionariedad-1" id="toc-condición-de-estacionariedad-1" class="nav-link" data-scroll-target="#condición-de-estacionariedad-1"><span class="header-section-number">3.11.4</span> Condición de estacionariedad</a></li>
+  <li><a href="#expansión-en-ma" id="toc-expansión-en-ma" class="nav-link" data-scroll-target="#expansión-en-ma"><span class="header-section-number">3.11.5</span> Expansión en MA(∞)</a></li>
+  <li><a href="#estacionariedad-2" id="toc-estacionariedad-2" class="nav-link" data-scroll-target="#estacionariedad-2"><span class="header-section-number">3.11.6</span> Estacionariedad</a></li>
+  <li><a href="#características-de-los-procesos-armap-q" id="toc-características-de-los-procesos-armap-q" class="nav-link" data-scroll-target="#características-de-los-procesos-armap-q"><span class="header-section-number">3.11.7</span> Características de los procesos ARMA(p, q)</a></li>
+  <li><a href="#caso-particular-proceso-arma1-1" id="toc-caso-particular-proceso-arma1-1" class="nav-link" data-scroll-target="#caso-particular-proceso-arma1-1"><span class="header-section-number">3.11.8</span> Caso particular: Proceso ARMA(1, 1)</a></li>
+  <li><a href="#cálculo-de-autocovarianzas-para-el-proceso-arma1-1" id="toc-cálculo-de-autocovarianzas-para-el-proceso-arma1-1" class="nav-link" data-scroll-target="#cálculo-de-autocovarianzas-para-el-proceso-arma1-1"><span class="header-section-number">3.11.9</span> Cálculo de autocovarianzas para el proceso ARMA(1, 1)</a></li>
+  </ul></li>
+  <li><a href="#motivación-ejemplo-de-diferenciación-para-eliminar-tendencias" id="toc-motivación-ejemplo-de-diferenciación-para-eliminar-tendencias" class="nav-link" data-scroll-target="#motivación-ejemplo-de-diferenciación-para-eliminar-tendencias"><span class="header-section-number">3.12</span> Motivación: Ejemplo de diferenciación para eliminar tendencias</a>
+  <ul class="collapse">
+  <li><a href="#serie-con-tendencia-lineal" id="toc-serie-con-tendencia-lineal" class="nav-link" data-scroll-target="#serie-con-tendencia-lineal"><span class="header-section-number">3.12.1</span> Serie con tendencia lineal</a></li>
+  <li><a href="#serie-con-tendencia-cuadrática" id="toc-serie-con-tendencia-cuadrática" class="nav-link" data-scroll-target="#serie-con-tendencia-cuadrática"><span class="header-section-number">3.12.2</span> Serie con tendencia cuadrática</a></li>
+  </ul></li>
+  <li><a href="#proceso-autorregresivo-integrado-de-medias-móviles-arima" id="toc-proceso-autorregresivo-integrado-de-medias-móviles-arima" class="nav-link" data-scroll-target="#proceso-autorregresivo-integrado-de-medias-móviles-arima"><span class="header-section-number">3.13</span> Proceso autorregresivo integrado de medias móviles (ARIMA)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelos lineales para series de tiempo estacionarias</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="procesos-de-media-movil-ma" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="procesos-de-media-movil-ma"><span class="header-section-number">3.1</span> Procesos de Media Movil (MA)</h2>
+<p>Un proceso de <strong>media móvil de orden</strong> <span class="math inline">\(q\)</span>, denotado como <strong>MA(</strong><span class="math inline">\(q\)</span>), modela una serie temporal donde el valor actual depende linealmente de los errores aleatorios ocurridos en los últimos <span class="math inline">\(q\)</span> periodos. Su forma general es:</p>
+<p><span class="math display">\[
+Y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2} + \cdots + \theta_q \epsilon_{t-q}
+\]</span></p>
+<p>Aquí <span class="math inline">\(\mu\)</span> es la media constante del proceso. - <span class="math inline">\(\epsilon_t, \epsilon_{t-1}, \ldots, \epsilon_{t-q}\)</span>: Términos de error (ruido blanco) independientes e idénticamente distribuidos (i.i.d.), con distribución <span class="math inline">\(\epsilon_t \sim N(0, \sigma^2)\)</span>. - <span class="math inline">\(\theta_1, \theta_2, \ldots, \theta_q\)</span>: Coeficientes reales que miden el impacto de los errores pasados en el valor actual.</p>
+<section id="propiedades" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="propiedades"><span class="header-section-number">3.1.1</span> Propiedades:</h3>
+<ol type="1">
+<li><p><strong>Persistencia del ruido</strong>:<br>
+El efecto de un shock (<span class="math inline">\(\epsilon_t\)</span>) no desaparece inmediatamente. En su lugar, influye en las observaciones durante <span class="math inline">\(q\)</span> periodos consecutivos.<br>
+<em>Ejemplo</em>: En un modelo MA(2), un error en el tiempo <span class="math inline">\(t\)</span> afecta a <span class="math inline">\(Y_t\)</span>, <span class="math inline">\(Y_{t+1}\)</span>, y <span class="math inline">\(Y_{t+2}\)</span>.</p></li>
+<li><p><strong>Decaimiento abrupto</strong>:<br>
+Después de <span class="math inline">\(q\)</span> periodos, el impacto del ruido se anula por completo. Esto contrasta con modelos autorregresivos (AR), donde los efectos pueden persistir indefinidamente.<br>
+<em>Ejemplo</em>: En un MA(3), el error <span class="math inline">\(\epsilon_{t-3}\)</span> no influye en <span class="math inline">\(Y_t\)</span>, ya que su efecto termina en <span class="math inline">\(t = 3\)</span>.</p></li>
+</ol>
+</section>
+<section id="modelización-con-ma2" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="modelización-con-ma2"><span class="header-section-number">3.1.2</span> Modelización con MA(2)</h3>
+<p><strong>Ecuación del modelo</strong>:<br>
+<span class="math display">\[
+Y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2}
+\]</span></p>
+<p><strong>Interpretación</strong>:<br>
+- <span class="math inline">\(Y_t\)</span>: Demanda en el día <span class="math inline">\(t\)</span>.<br>
+- <span class="math inline">\(\mu\)</span>: Demanda base constante (sin ofertas).<br>
+- <span class="math inline">\(\epsilon_t\)</span>: Shock por oferta especial en el día <span class="math inline">\(t\)</span> (ruido blanco <span class="math inline">\(\sim N(0, \sigma^2)\)</span>).<br>
+- <span class="math inline">\(\theta_1, \theta_2\)</span>: Coeficientes que miden el impacto residual de la oferta en los días posteriores.</p>
+<hr>
+</section>
+</section>
+<section id="características-de-los-modelos-maq" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="características-de-los-modelos-maq"><span class="header-section-number">3.2</span> Características de los Modelos MA(q)</h2>
+<section id="valor-esperado" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="valor-esperado"><span class="header-section-number">3.2.1</span> Valor esperado</h3>
+<p>Un proceso MA(<span class="math inline">\(q\)</span>) tiene una <strong>media constante</strong>, lo que garantiza estacionariedad en media. Esto se deriva de la linealidad del operador esperanza y la propiedad de media cero de los errores <span class="math inline">\(\varepsilon_t\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{E}(Y_t) = \mu + \mathbb{E}(\varepsilon_t) + \theta_1 \mathbb{E}(\varepsilon_{t-1}) + \cdots + \theta_q \mathbb{E}(\varepsilon_{t-q}) = \mu.
+\]</span></p>
+<p><strong>Explicación</strong>:<br>
+- Los términos <span class="math inline">\(\varepsilon_{t-j}\)</span> son ruido blanco, por lo que <span class="math inline">\(\mathbb{E}(\varepsilon_{t-j}) = 0\)</span> para todo <span class="math inline">\(j\)</span>.<br>
+- La constante <span class="math inline">\(\mu\)</span> representa el nivel base de la serie, independiente del tiempo.</p>
+</section>
+<section id="varianza" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="varianza"><span class="header-section-number">3.2.2</span> Varianza</h3>
+<p>La varianza de un proceso MA(<span class="math inline">\(q\)</span>) refleja la dispersión alrededor de la media <span class="math inline">\(\mu\)</span> y depende de los coeficientes <span class="math inline">\(\theta_j\)</span> y la varianza del ruido (<span class="math inline">\(\sigma^2\)</span>):</p>
+<p><span class="math display">\[
+\gamma_0 = \mathbb{E}[(Y_t - \mu)^2] = \mathbb{E}\left[(\varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \cdots + \theta_q \varepsilon_{t-q})^2\right].
+\]</span></p>
+<p>Dado que los errores <span class="math inline">\(\varepsilon_t\)</span> son <strong>no correlacionados</strong> (<span class="math inline">\(\mathbb{E}[\varepsilon_t \varepsilon_{t-j}] = 0\)</span> para <span class="math inline">\(j \neq 0\)</span>), la expresión se simplifica a:</p>
+<p><span class="math display">\[
+\gamma_0 = \sigma^2 \left(1 + \theta_1^2 + \theta_2^2 + \cdots + \theta_q^2\right).
+\]</span></p>
+<p><strong>Interpretación</strong>:<br>
+- Cada término <span class="math inline">\(\theta_j^2 \sigma^2\)</span> captura la contribución del error rezagado <span class="math inline">\(j\)</span> a la varianza total.<br>
+- La varianza es siempre positiva y aumenta con la magnitud de los coeficientes <span class="math inline">\(\theta_j\)</span>.</p>
+</section>
+<section id="implicaciones-clave" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="implicaciones-clave"><span class="header-section-number">3.2.3</span> Implicaciones clave</h3>
+<ol type="1">
+<li><strong>Estacionariedad en covarianza</strong>:
+<ul>
+<li>La media constante (<span class="math inline">\(\mu\)</span>) y la varianza finita (<span class="math inline">\(\gamma_0\)</span>) garantizan que el proceso MA(<span class="math inline">\(q\)</span>) sea <strong>débilmente estacionario</strong>.<br>
+</li>
+<li>Las autocovarianzas <span class="math inline">\(\gamma_j\)</span> para <span class="math inline">\(j &gt; q\)</span> son cero, lo que simplifica el análisis de dependencias temporales.</li>
+</ul></li>
+<li><strong>Efecto de los coeficientes</strong> <span class="math inline">\(\theta_j\)</span>:
+<ul>
+<li>Coeficientes mayores en magnitud aumentan la volatilidad de la serie (<span class="math inline">\(\uparrow \gamma_0\)</span>).<br>
+</li>
+<li>Un <span class="math inline">\(\theta_j = 0\)</span> implica que el error en el lag <span class="math inline">\(j\)</span> no influye en <span class="math inline">\(Y_t\)</span>.</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="función-de-autocovarianza-de-los-modelos-maq" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="función-de-autocovarianza-de-los-modelos-maq"><span class="header-section-number">3.3</span> Función de autocovarianza de los modelos MA(q)</h2>
+<section id="autocovarianza-de-un-proceso-maq" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="autocovarianza-de-un-proceso-maq"><span class="header-section-number">3.3.1</span> Autocovarianza de un proceso MA(q)</h3>
+<p>La <strong>j-ésima autocovarianza</strong> (<span class="math inline">\(\gamma_j\)</span>) de un proceso de media móvil de orden <span class="math inline">\(q\)</span>, MA(<span class="math inline">\(q\)</span>), cuantifica la dependencia lineal entre observaciones separadas por <span class="math inline">\(j\)</span> periodos. Para <span class="math inline">\(j = 1, 2, \ldots, q\)</span>, se define como:</p>
+<p><span class="math display">\[
+\gamma_j = \mathbb{E}\left[ \left( \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q} \right) \cdot \left( \varepsilon_{t-j} + \theta_1 \varepsilon_{t-j-1} + \cdots + \theta_q \varepsilon_{t-j-q} \right) \right].
+\]</span></p>
+<p>Dado que los términos de error <span class="math inline">\(\{\varepsilon_t\}\)</span> son no correlacionados (<span class="math inline">\(\mathbb{E}[\varepsilon_t \varepsilon_{s}] = 0\)</span> para <span class="math inline">\(t \neq s\)</span>), solo sobreviven los productos donde los índices coinciden. Esto simplifica la expresión a:</p>
+<p><span class="math display">\[
+\gamma_j = \sigma^2 \left( \theta_j + \theta_{j+1} \theta_1 + \theta_{j+2} \theta_2 + \cdots + \theta_q \theta_{q-j} \right), \quad \text{para } j \leq q.
+\]</span></p>
+<p>Para <span class="math inline">\(j &gt; q\)</span>, no hay superposición entre los términos de error, por lo que:<br>
+<span class="math display">\[
+\gamma_j = 0 \quad \text{si } j &gt; q.
+\]</span></p>
+</section>
+<section id="autocorrelación-de-un-proceso-maq" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="autocorrelación-de-un-proceso-maq"><span class="header-section-number">3.3.2</span> Autocorrelación de un proceso MA(q)</h3>
+<p>La <strong>j-ésima autocorrelación</strong> (<span class="math inline">\(\rho_j\)</span>) normaliza la autocovarianza respecto a la varianza del proceso (<span class="math inline">\(\gamma_0\)</span>):</p>
+<p><span class="math display">\[
+\rho_j = \frac{\gamma_j}{\gamma_0} = \frac{\theta_j + \theta_{j+1} \theta_1 + \theta_{j+2} \theta_2 + \cdots + \theta_q \theta_{q-j}}{1 + \theta_1^2 + \theta_2^2 + \cdots + \theta_q^2}, \quad \text{para } j \leq q.
+\]</span></p>
+<p>Para <span class="math inline">\(j &gt; q\)</span>, la autocorrelación es cero:<br>
+<span class="math display">\[
+\rho_j = 0 \quad \text{si } j &gt; q.
+\]</span></p>
+</section>
+<section id="casos-particulares" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="casos-particulares"><span class="header-section-number">3.3.3</span> Casos particulares</h3>
+<section id="proceso-ma1" class="level4">
+<h4 class="anchored" data-anchor-id="proceso-ma1">Proceso MA(1)</h4>
+<p>Un proceso de <strong>media móvil de orden 1</strong>, MA(1), se define como:<br>
+<span class="math display">\[
+Y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1},
+\]</span><br>
+donde <span class="math inline">\(\varepsilon_t \sim N(0, \sigma^2)\)</span> es ruido blanco.</p>
+<section id="autocovarianzas-del-ma1" class="level5">
+<h5 class="anchored" data-anchor-id="autocovarianzas-del-ma1">Autocovarianzas del MA(1):</h5>
+<ol type="1">
+<li><p><strong>Varianza (</strong><span class="math inline">\(\gamma_0\)</span>):<br>
+<span class="math display">\[
+\gamma_0 = \left(1 + \theta_1^2\right) \sigma^2.
+\]</span><br>
+Mide la dispersión total alrededor de la media <span class="math inline">\(\mu\)</span>, incluyendo el efecto del shock actual (<span class="math inline">\(\varepsilon_t\)</span>) y el rezagado (<span class="math inline">\(\theta_1 \varepsilon_{t-1}\)</span>).</p></li>
+<li><p><strong>Autocovarianza de primer orden (</strong><span class="math inline">\(\gamma_1\)</span>):<br>
+<span class="math display">\[
+\gamma_1 = \theta_1 \sigma^2.
+\]</span><br>
+Captura la dependencia entre observaciones separadas por un periodo.</p></li>
+<li><p><strong>Autocovarianzas para</strong> <span class="math inline">\(j \geq 2\)</span>:<br>
+<span class="math display">\[
+\gamma_j = 0 \quad \text{para } j \geq 2.
+\]</span><br>
+Los shocks no persisten más allá de un periodo, característica clave de los MA(1).</p></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="proceso-ma2" class="level4">
+<h4 class="anchored" data-anchor-id="proceso-ma2">Proceso MA(2)</h4>
+<p>Un proceso de <strong>media móvil de orden 2</strong>, MA(2), se expresa como:<br>
+<span class="math display">\[
+Y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2}.
+\]</span></p>
+<section id="autocovarianzas-del-ma2" class="level5">
+<h5 class="anchored" data-anchor-id="autocovarianzas-del-ma2">Autocovarianzas del MA(2):</h5>
+<ol type="1">
+<li><p><strong>Varianza (</strong><span class="math inline">\(\gamma_0\)</span>):<br>
+<span class="math display">\[
+\gamma_0 = \left(1 + \theta_1^2 + \theta_2^2\right) \sigma^2.
+\]</span><br>
+Incluye la contribución de los shocks actuales y los dos rezagos anteriores.</p></li>
+<li><p><strong>Autocovarianza de primer orden (</strong><span class="math inline">\(\gamma_1\)</span>):<br>
+<span class="math display">\[
+\gamma_1 = \left(\theta_1 + \theta_1 \theta_2\right) \sigma^2.
+\]</span><br>
+Refleja la influencia combinada del shock en <span class="math inline">\(t-1\)</span> y su interacción con <span class="math inline">\(t-2\)</span>.</p></li>
+<li><p><strong>Autocovarianza de segundo orden (</strong><span class="math inline">\(\gamma_2\)</span>):<br>
+<span class="math display">\[
+\gamma_2 = \theta_2 \sigma^2.
+\]</span><br>
+Representa el impacto directo del shock en <span class="math inline">\(t-2\)</span>.</p></li>
+<li><p><strong>Autocovarianzas para</strong> <span class="math inline">\(j \geq 3\)</span>:<br>
+<span class="math display">\[
+\gamma_j = 0 \quad \text{para } j \geq 3.
+\]</span><br>
+Los efectos de los shocks se limitan a dos periodos.</p></li>
+</ol>
+</section>
+</section>
+<section id="ejemplo" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo">Ejemplo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### PRIMER EJEMPLO MA(1)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Simular un MA(1): Y_t = e_t + 0.7*e_{t-1}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ma1 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">200</span>, <span class="fu">list</span>(<span class="at">ma =</span> <span class="fl">0.7</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar la serie</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ma1, <span class="at">main =</span> <span class="st">"Serie de tiempo"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Y_t"</span>, <span class="at">col =</span> <span class="st">"#F4B4C9"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma (ACF)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ma1, <span class="at">main =</span> <span class="st">"ACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma parcial (PACF)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(ma1, <span class="at">main =</span> <span class="st">"PACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ejemplo-1" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-1">Ejemplo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### SEGUNDO EJEMPLO MA(3)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simular un MA(3): Y_t = e_t + 0.6*e_{t-1}</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># - 0.4*e_{t-2} + 0.3*e_{t-3}</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ma3 <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">200</span>, <span class="fu">list</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="sc">-</span><span class="fl">0.4</span>, <span class="fl">0.3</span>)))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar la serie</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ma3, <span class="at">main =</span> <span class="st">"Serie de tiempo"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Y_t"</span>, <span class="at">col =</span> <span class="st">"#F4B4C9"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma (ACF)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ma3, <span class="at">main =</span> <span class="st">"ACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma parcial (PACF)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(ma3, <span class="at">main =</span> <span class="st">"PACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="ma-de-orden-infinito" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="ma-de-orden-infinito"><span class="header-section-number">3.4</span> MA de orden infinito</h2>
+<p>Un proceso de <strong>media móvil de orden infinito</strong>, denotado como <span class="math inline">\(MA(\infty)\)</span>, modela series temporales donde el valor actual depende de una combinación lineal infinita de errores pasados. Su estructura matemática se define como:</p>
+<p><span class="math display">\[
+Y_t = \mu + \sum_{j=0}^\infty \psi_j \epsilon_{t-j} = \mu + \epsilon_t + \psi_1 \epsilon_{t-1} + \psi_2 \epsilon_{t-2} + \cdots
+\]</span></p>
+<section id="componentes-clave" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="componentes-clave"><span class="header-section-number">3.4.1</span> Componentes clave:</h3>
+<ul>
+<li><span class="math inline">\(\mu\)</span>: Media constante del proceso.<br>
+</li>
+<li><span class="math inline">\(\epsilon_t, \epsilon_{t-1}, \epsilon_{t-2}, \ldots\)</span>: Términos de error independientes e idénticamente distribuidos (i.i.d.), con distribución <span class="math inline">\(\epsilon_t \sim N(0, \sigma^2)\)</span>.<br>
+</li>
+<li><span class="math inline">\(\psi_j\)</span>: Coeficientes reales que ponderan el impacto de los errores pasados en <span class="math inline">\(Y_t\)</span>.</li>
+</ul>
+</section>
+<section id="características-principales" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="características-principales"><span class="header-section-number">3.4.2</span> Características principales:</h3>
+<ol type="1">
+<li><p><strong>Persistencia infinita del ruido</strong>:<br>
+A diferencia de los modelos MA(<span class="math inline">\(q\)</span>), donde los shocks desaparecen después de <span class="math inline">\(q\)</span> periodos, en un <span class="math inline">\(MA(\infty)\)</span> el efecto de un error <span class="math inline">\(\epsilon_t\)</span> <strong>perdura indefinidamente</strong>. Cada shock influye en todas las observaciones futuras, aunque su impacto disminuye según la magnitud de los coeficientes <span class="math inline">\(\psi_j\)</span>.</p></li>
+<li><p><strong>Condición de estacionariedad</strong>:<br>
+Para garantizar que el proceso sea <strong>estacionario en covarianza</strong>, los coeficientes deben satisfacer:<br>
+<span class="math display">\[
+\sum_{j=0}^\infty \psi_j^2 &lt; \infty.
+\]</span><br>
+Esta condición asegura que la varianza del proceso sea finita, evitando que las contribuciones acumuladas de los errores pasados divergían.</p></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="características-de-los-procesos-mainfty" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="características-de-los-procesos-mainfty"><span class="header-section-number">3.5</span> Características de los procesos MA(infty)</h2>
+<section id="valor-esperado-1" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="valor-esperado-1"><span class="header-section-number">3.5.1</span> Valor esperado</h3>
+<p>La media de un proceso <span class="math inline">\(MA(\infty)\)</span> se mantiene constante en el tiempo, independientemente de los errores pasados. Esto se deriva directamente de la linealidad del operador esperanza y la propiedad de media cero del ruido blanco <span class="math inline">\(\epsilon_t\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{E}(Y_t) = \mu.
+\]</span></p>
+<p>Esta condición garantiza que el proceso sea <strong>estacionario en media</strong>, un requisito fundamental para su análisis estadístico.</p>
+</section>
+<section id="varianza-1" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="varianza-1"><span class="header-section-number">3.5.2</span> Varianza</h3>
+<p>La varianza del proceso <span class="math inline">\(MA(\infty)\)</span> se calcula considerando la contribución acumulada de todos los términos de error pasados. Dado que los coeficientes <span class="math inline">\(\psi_j\)</span> ponderan estos errores, la varianza queda expresada como:</p>
+<p><span class="math display">\[
+\gamma_0 = \mathbb{E}[(Y_t - \mu)^2] = \sigma^2 \sum_{j=0}^{\infty} \psi_j^2.
+\]</span></p>
+<p>Para que esta varianza sea finita (y el proceso sea <strong>estacionario en covarianza</strong>), la serie de los cuadrados de los coeficientes debe converger:</p>
+<p><span class="math display">\[
+\sum_{j=0}^{\infty} \psi_j^2 &lt; \infty.
+\]</span></p>
+<p>Esta condición asegura que los efectos de los shocks pasados no se acumulen indefinidamente, evitando que la varianza diverja.</p>
+<hr>
+</section>
+</section>
+<section id="importancia-de-los-procesos-ma" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="importancia-de-los-procesos-ma"><span class="header-section-number">3.6</span> Importancia de los procesos MA(∞)</h2>
+<p>La representación de <strong>media móvil infinita</strong> (MA(∞)) es un marco teórico fundamental para analizar series temporales estacionarias. Su relevancia radica en su capacidad para modelar cualquier proceso estacionario no determinístico, una afirmación respaldada por el <strong>Teorema de Wold (1938)</strong>.</p>
+<section id="teorema-de-wold-la-base-teórica" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="teorema-de-wold-la-base-teórica"><span class="header-section-number">3.6.1</span> Teorema de Wold: La base teórica</h3>
+<p>Este teorema establece que toda serie temporal estacionaria no determinística puede descomponerse en dos componentes:<br>
+1. Una parte <strong>determinística</strong> (por ejemplo, tendencias o ciclos perfectamente predecibles).<br>
+2. Una parte <strong>no determinística</strong>, expresable como una combinación lineal infinita de errores pasados:</p>
+<p><span class="math display">\[
+y_t = \mu + \sum_{i=0}^{\infty} \psi_i e_{t-i},
+\]</span></p>
+<p>donde:<br>
+- <span class="math inline">\(e_t\)</span> es ruido blanco (<span class="math inline">\(e_t \sim N(0, \sigma^2)\)</span>).<br>
+- Los coeficientes <span class="math inline">\(\psi_i\)</span> satisfacen <span class="math inline">\(\sum_{i=0}^{\infty} \psi_i^2 &lt; \infty\)</span>, garantizando estacionariedad en covarianza.</p>
+</section>
+<section id="casos-especiales-de-la-representación-ma" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="casos-especiales-de-la-representación-ma"><span class="header-section-number">3.6.2</span> Casos especiales de la representación MA(∞)</h3>
+<p>Aunque el Teorema de Wold es general, en la práctica se utilizan modelos más simples que son subclases de MA(∞):</p>
+<ol type="1">
+<li><p><strong>Modelos MA(</strong><span class="math inline">\(q\)</span>):<br>
+Solo un número finito de coeficientes <span class="math inline">\(\psi_i\)</span> son no nulos. Por ejemplo, en un MA(2), <span class="math inline">\(\psi_0 = 1\)</span>, <span class="math inline">\(\psi_1 = \theta_1\)</span>, <span class="math inline">\(\psi_2 = \theta_2\)</span>, y <span class="math inline">\(\psi_j = 0\)</span> para <span class="math inline">\(j &gt; 2\)</span>.</p></li>
+<li><p><strong>Modelos AR(</strong><span class="math inline">\(p\)</span>):<br>
+Los coeficientes <span class="math inline">\(\psi_j\)</span> se generan recursivamente a partir de un número finito de parámetros autorregresivos. Por ejemplo, un AR(1) con parámetro <span class="math inline">\(\phi\)</span> tiene <span class="math inline">\(\psi_j = \phi^j\)</span>, lo que implica una dependencia exponencial decreciente.</p></li>
+<li><p><strong>Modelos ARMA(</strong><span class="math inline">\(p, q\)</span>):<br>
+Combina componentes AR y MA finitos, permitiendo mayor flexibilidad al capturar tanto dependencias autorregresivas como shocks transitorios.</p></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="procesos-de-autorregresión-de-orden-1-ar" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="procesos-de-autorregresión-de-orden-1-ar"><span class="header-section-number">3.7</span> Procesos de autorregresión de orden 1 (AR)</h2>
+<p>Un proceso <strong>AR(1)</strong> se define mediante la ecuación:<br>
+<span class="math display">\[
+Y_t = c + \phi Y_{t-1} + \epsilon_t,
+\]</span><br>
+donde:<br>
+- <span class="math inline">\(\epsilon_t \sim N(0, 1)\)</span>: Ruido blanco gaussiano.<br>
+- <span class="math inline">\(c\)</span>: Término constante (nivel base de la serie).<br>
+- <span class="math inline">\(\phi\)</span>: Coeficiente autorregresivo que mide la influencia del valor pasado <span class="math inline">\(Y_{t-1}\)</span> en <span class="math inline">\(Y_t\)</span>.</p>
+<section id="condición-de-estacionariedad" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="condición-de-estacionariedad"><span class="header-section-number">3.7.1</span> Condición de Estacionariedad</h3>
+<p>El proceso AR(1) es <strong>estacionario en covarianza</strong> si y solo si:<br>
+<span class="math display">\[
+|\phi| &lt; 1.
+\]</span><br>
+<strong>Interpretación</strong>:<br>
+- Si <span class="math inline">\(|\phi| \geq 1\)</span>, la varianza del proceso diverge (no estacionario).<br>
+- Ejemplo: Si <span class="math inline">\(\phi = 1\)</span>, el modelo se convierte en un <em>paseo aleatorio</em>: <span class="math inline">\(Y_t = c + Y_{t-1} + \epsilon_t\)</span>, con varianza creciente en el tiempo.</p>
+</section>
+<section id="propiedades-estadísticas" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2" class="anchored" data-anchor-id="propiedades-estadísticas"><span class="header-section-number">3.7.2</span> Propiedades Estadísticas</h3>
+<section id="media" class="level4">
+<h4 class="anchored" data-anchor-id="media">Media</h4>
+<p>La media del proceso estacionario es constante:<br>
+<span class="math display">\[
+\mu = \frac{c}{1 - \phi}.
+\]</span><br>
+<em>Derivación</em>:<br>
+<span class="math display">\[
+\mathbb{E}(Y_t) = c + \phi \mathbb{E}(Y_{t-1}) \implies \mu = c + \phi \mu \implies \mu = \frac{c}{1 - \phi}.
+\]</span></p>
+</section>
+<section id="varianza-2" class="level4">
+<h4 class="anchored" data-anchor-id="varianza-2">Varianza</h4>
+<p>La varianza está dada por:<br>
+<span class="math display">\[
+\sigma^2 = \frac{1}{1 - \phi^2}.
+\]</span><br>
+<em>Derivación</em>:<br>
+<span class="math display">\[
+\text{Var}(Y_t) = \phi^2 \text{Var}(Y_{t-1}) + \text{Var}(\epsilon_t) \implies \sigma^2 = \phi^2 \sigma^2 + 1 \implies \sigma^2 = \frac{1}{1 - \phi^2}.
+\]</span></p>
+</section>
+<section id="autocorrelaciones" class="level4">
+<h4 class="anchored" data-anchor-id="autocorrelaciones">Autocorrelaciones</h4>
+<p>La autocorrelación en el lag <span class="math inline">\(k\)</span> decae exponencialmente:<br>
+<span class="math display">\[
+\rho_k = \phi^k \quad (k \geq 0).
+\]</span><br>
+- <strong>ACF (Función de Autocorrelación)</strong>: Decae lentamente, mostrando dependencias persistentes.<br>
+- <strong>PACF (Función de Autocorrelación Parcial)</strong>: Tiene un pico significativo en <span class="math inline">\(k=1\)</span> y es cero para <span class="math inline">\(k &gt; 1\)</span>.</p>
+</section>
+</section>
+<section id="representación-ma-bajo-estacionariedad" class="level3" data-number="3.7.3">
+<h3 data-number="3.7.3" class="anchored" data-anchor-id="representación-ma-bajo-estacionariedad"><span class="header-section-number">3.7.3</span> Representación MA(∞) bajo estacionariedad</h3>
+<p>Cuando <span class="math inline">\(|\phi| &lt; 1\)</span>, el proceso AR(1) puede expresarse como una combinación lineal infinita de shocks pasados, es decir, un <strong>MA(∞)</strong>. Esto se demuestra expandiendo recursivamente la ecuación original:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y_t &amp;= c + \phi Y_{t-1} + \varepsilon_t \\
+&amp;= c + \phi (c + \phi Y_{t-2} + \varepsilon_{t-1}) + \varepsilon_t \\
+&amp;= c + \phi c + \phi^2 Y_{t-2} + \phi \varepsilon_{t-1} + \varepsilon_t \\
+&amp;\;\;\vdots \\
+&amp;= \sum_{k=0}^{\infty} \phi^k c + \sum_{j=0}^{\infty} \phi^j \varepsilon_{t-j}.
+\end{aligned}
+\]</span></p>
+<p>La convergencia de estas series está garantizada por la condición <span class="math inline">\(|\phi| &lt; 1\)</span>. Simplificando:</p>
+<p><span class="math display">\[
+Y_t = \frac{c}{1 - \phi} + \sum_{j=0}^{\infty} \phi^j \varepsilon_{t-j}.
+\]</span></p>
+<hr>
+</section>
+<section id="componentes-clave-de-la-representación" class="level3" data-number="3.7.4">
+<h3 data-number="3.7.4" class="anchored" data-anchor-id="componentes-clave-de-la-representación"><span class="header-section-number">3.7.4</span> Componentes clave de la representación:</h3>
+<ol type="1">
+<li><p><strong>Media del proceso</strong>:<br>
+<span class="math display">\[
+\mu = \frac{c}{1 - \phi}.
+\]</span><br>
+Corresponde al primer término de la serie geométrica convergente.</p></li>
+<li><p><strong>Estructura de dependencia</strong>:<br>
+Los shocks pasados <span class="math inline">\(\varepsilon_{t-j}\)</span> influyen en <span class="math inline">\(Y_t\)</span> con pesos <span class="math inline">\(\phi^j\)</span>, que decaen exponencialmente. Esto refleja cómo el impacto de un shock se disipa gradualmente en el tiempo.</p></li>
+<li><p><strong>Vínculo con estacionariedad</strong>:<br>
+La convergencia <span class="math inline">\(\sum_{j=0}^{\infty} \phi^{2j} &lt; \infty\)</span> asegura que la varianza sea finita, cumpliendo con la condición de estacionariedad en covarianza.</p></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="características-de-los-procesos-ar1" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="características-de-los-procesos-ar1"><span class="header-section-number">3.8</span> Características de los procesos AR(1)</h2>
+<section id="valor-esperado-2" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1" class="anchored" data-anchor-id="valor-esperado-2"><span class="header-section-number">3.8.1</span> Valor esperado</h3>
+<p>Para un proceso AR(1) estacionario (<span class="math inline">\(|\phi| &lt; 1\)</span>), la <strong>media</strong> se obtiene aplicando el operador esperanza a su representación MA(∞):<br>
+<span class="math display">\[
+\mathbb{E}(Y_t) = \mathbb{E}\left[ \frac{c}{1 - \phi} + \sum_{j=0}^{\infty} \phi^j \varepsilon_{t-j} \right].
+\]</span><br>
+Dado que <span class="math inline">\(\mathbb{E}(\varepsilon_{t-j}) = 0\)</span> para todo <span class="math inline">\(j\)</span>, solo sobrevive el término constante:<br>
+<span class="math display">\[
+\mu = \frac{c}{1 - \phi}.
+\]</span><br>
+Esto confirma que el proceso tiene <strong>media constante</strong>, cumpliendo con la estacionariedad en media.</p>
+</section>
+<section id="varianza-3" class="level3" data-number="3.8.2">
+<h3 data-number="3.8.2" class="anchored" data-anchor-id="varianza-3"><span class="header-section-number">3.8.2</span> Varianza</h3>
+<p>La <strong>varianza</strong> del proceso se calcula a partir de la desviación respecto a la media:<br>
+<span class="math display">\[
+\gamma_0 = \mathbb{E}\left[(Y_t - \mu)^2\right] = \mathbb{E}\left[\left(\sum_{j=0}^{\infty} \phi^j \varepsilon_{t-j}\right)^2\right].
+\]</span><br>
+Expandimos el cuadrado y utilizamos la independencia de los términos <span class="math inline">\(\varepsilon_{t-j}\)</span>:<br>
+<span class="math display">\[
+\gamma_0 = \sum_{j=0}^{\infty} \phi^{2j} \mathbb{E}(\varepsilon_{t-j}^2) = \sigma^2 \sum_{j=0}^{\infty} \phi^{2j}.
+\]</span><br>
+La serie geométrica <span class="math inline">\(\sum_{j=0}^{\infty} \phi^{2j}\)</span> converge bajo <span class="math inline">\(|\phi| &lt; 1\)</span>, resultando en:<br>
+<span class="math display">\[
+\gamma_0 = \frac{\sigma^2}{1 - \phi^2}.
+\]</span><br>
+Esta expresión refleja cómo la varianza del proceso depende tanto de la volatilidad del ruido (<span class="math inline">\(\sigma^2\)</span>) como de la persistencia autorregresiva (<span class="math inline">\(\phi\)</span>).</p>
+<p><strong>Condición clave</strong>:<br>
+- <span class="math inline">\(|\phi| &lt; 1\)</span> asegura convergencia de la serie y estacionariedad en covarianza.<br>
+- Si <span class="math inline">\(|\phi| \geq 1\)</span>, la varianza diverge, y el proceso no es estacionario.</p>
+<hr>
+</section>
+</section>
+<section id="función-de-autocovarianza-de-los-procesos-ar1" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="función-de-autocovarianza-de-los-procesos-ar1"><span class="header-section-number">3.9</span> Función de autocovarianza de los procesos AR(1)</h2>
+<section id="autocovarianza-gamma_j" class="level3" data-number="3.9.1">
+<h3 data-number="3.9.1" class="anchored" data-anchor-id="autocovarianza-gamma_j"><span class="header-section-number">3.9.1</span> Autocovarianza (<span class="math inline">\(\gamma_j\)</span>)</h3>
+<p>Para un proceso AR(1) estacionario (<span class="math inline">\(|\phi| &lt; 1\)</span>), la <strong>j-ésima autocovarianza</strong> se deriva utilizando su representación MA(∞):<br>
+<span class="math display">\[
+Y_t - \mu = \sum_{k=0}^{\infty} \phi^k \varepsilon_{t-k}.
+\]</span><br>
+La autocovarianza se calcula como:<br>
+<span class="math display">\[
+\gamma_j = \mathbb{E}\left[ \left( \sum_{k=0}^\infty \phi^k \varepsilon_{t-k} \right) \left( \sum_{m=0}^\infty \phi^m \varepsilon_{t-j-m} \right) \right].
+\]</span><br>
+Debido a la independencia de los términos <span class="math inline">\(\varepsilon_t\)</span>, solo sobreviven los productos donde los índices coinciden (<span class="math inline">\(k = m + j\)</span>):<br>
+<span class="math display">\[
+\gamma_j = \sum_{k=0}^\infty \phi^{k+j} \phi^k \sigma^2 = \phi^j \sigma^2 \sum_{k=0}^\infty \phi^{2k}.
+\]</span><br>
+La serie geométrica converge bajo <span class="math inline">\(|\phi| &lt; 1\)</span>, resultando en:<br>
+<span class="math display">\[
+\gamma_j = \frac{\phi^j \sigma^2}{1 - \phi^2} \quad \text{para } j \geq 0.
+\]</span></p>
+</section>
+<section id="autocorrelación-rho_j" class="level3" data-number="3.9.2">
+<h3 data-number="3.9.2" class="anchored" data-anchor-id="autocorrelación-rho_j"><span class="header-section-number">3.9.2</span> Autocorrelación (<span class="math inline">\(\rho_j\)</span>)</h3>
+<p>La <strong>j-ésima autocorrelación</strong> se obtiene normalizando la autocovarianza por la varianza (<span class="math inline">\(\gamma_0\)</span>):<br>
+<span class="math display">\[
+\rho_j = \frac{\gamma_j}{\gamma_0} = \frac{\frac{\phi^j \sigma^2}{1 - \phi^2}}{\frac{\sigma^2}{1 - \phi^2}} = \phi^j.
+\]</span><br>
+Esto implica que las autocorrelaciones decaen <strong>exponencialmente</strong> con el lag <span class="math inline">\(j\)</span>:<br>
+<span class="math display">\[
+\rho_j = \phi^j \quad \text{para } j \geq 0.
+\]</span></p>
+<section id="ejemplo-2" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-2">Ejemplo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## PRIMER EJEMPLO AR(1)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simular un AR(1): Y_t = 0.5*Y_{t-1} + e_t</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">200</span>, <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.5</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar la serie</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ar1, <span class="at">main =</span> <span class="st">"Serie de tiempo"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Y_t"</span>, <span class="at">col =</span> <span class="st">"#F4B4C9"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma (ACF)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ar1, <span class="at">main =</span> <span class="st">"ACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma parcial (PACF)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(ar1, <span class="at">main =</span> <span class="st">"PACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="procesos-de-autorregresión-de-orden-p" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="procesos-de-autorregresión-de-orden-p"><span class="header-section-number">3.10</span> Procesos de autorregresión de orden p</h2>
+<p>Un proceso <strong>AR(</strong><span class="math inline">\(p\)</span>) se define mediante la ecuación:<br>
+<span class="math display">\[
+Y_t = c + \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + \cdots + \phi_p Y_{t-p} + \epsilon_t,
+\]</span><br>
+donde:<br>
+- <span class="math inline">\(\{\epsilon_t\}\)</span>: Ruido blanco gaussiano (<span class="math inline">\(\epsilon_t \sim N(0, \sigma^2)\)</span>).<br>
+- <span class="math inline">\(c\)</span>: Constante.<br>
+- <span class="math inline">\(\phi_1, \ldots, \phi_p\)</span>: Coeficientes autorregresivos.</p>
+<section id="estacionariedad-de-procesos-arp" class="level3" data-number="3.10.1">
+<h3 data-number="3.10.1" class="anchored" data-anchor-id="estacionariedad-de-procesos-arp"><span class="header-section-number">3.10.1</span> Estacionariedad de procesos AR(p)</h3>
+<p>La estacionariedad del proceso AR(<span class="math inline">\(p\)</span>) requiere que <strong>todas las raíces</strong> de su ecuación característica:<br>
+<span class="math display">\[
+1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_p z^p = 0,
+\]</span><br>
+se encuentren <strong>fuera del círculo unitario</strong> (<span class="math inline">\(|z| &gt; 1\)</span>).</p>
+</section>
+<section id="comportamiento-de-los-correlogramas" class="level3" data-number="3.10.2">
+<h3 data-number="3.10.2" class="anchored" data-anchor-id="comportamiento-de-los-correlogramas"><span class="header-section-number">3.10.2</span> Comportamiento de los correlogramas</h3>
+<ul>
+<li><strong>Correlograma (ACF)</strong>: Decae de manera lenta, reflejando la persistencia de los shocks pasados.<br>
+</li>
+<li><strong>Correlograma parcial (PACF)</strong>: Muestra un corte abrupto después del lag <span class="math inline">\(p\)</span>, es decir, <span class="math inline">\(\rho_{parcial}(j) = 0\)</span> para <span class="math inline">\(j &gt; p\)</span>.</li>
+</ul>
+<p>Los procesos AR(<span class="math inline">\(p\)</span>) son útiles para modelar fenómenos con <strong>persistencia temporal</strong>, donde el valor actual depende de una combinación lineal de <span class="math inline">\(p\)</span> observaciones anteriores.</p>
+<p>Un proceso autorregresivo de orden <span class="math inline">\(p\)</span>, <strong>AR(</strong><span class="math inline">\(p\)</span>), puede expresarse mediante el <strong>operador de traslación</strong> <span class="math inline">\(B\)</span>, donde <span class="math inline">\(B^k Y_t = Y_{t-k}\)</span>:<br>
+<span class="math display">\[
+\Phi(B) Y_t = c + \varepsilon_t,
+\]</span><br>
+con:<br>
+<span class="math display">\[
+\Phi(B) = 1 - \phi_1 B - \phi_2 B^2 - \cdots - \phi_p B^p.
+\]</span></p>
+</section>
+<section id="condición-de-invertibilidad" class="level3" data-number="3.10.3">
+<h3 data-number="3.10.3" class="anchored" data-anchor-id="condición-de-invertibilidad"><span class="header-section-number">3.10.3</span> Condición de Invertibilidad</h3>
+<p>Si todas las raíces <span class="math inline">\(z\)</span> del polinomio característico:<br>
+<span class="math display">\[
+\Phi(z) = 1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_p z^p,
+\]</span><br>
+satisfacen <span class="math inline">\(|z| &gt; 1\)</span>, entonces:<br>
+1. <span class="math inline">\(\Phi(z) \neq 0\)</span> para <span class="math inline">\(|z| \leq 1\)</span>.<br>
+2. El operador <span class="math inline">\(\Phi(B)\)</span> es invertible, permitiendo escribir:<br>
+<span class="math display">\[
+Y_t = c \cdot \Phi^{-1}(B) + \Phi^{-1}(B) \varepsilon_t.
+\]</span></p>
+</section>
+<section id="expansión-en-serie-de-potencias" class="level3" data-number="3.10.4">
+<h3 data-number="3.10.4" class="anchored" data-anchor-id="expansión-en-serie-de-potencias"><span class="header-section-number">3.10.4</span> Expansión en Serie de Potencias</h3>
+<p>La inversa de <span class="math inline">\(\Phi(B)\)</span> admite una representación en serie de potencias para <span class="math inline">\(|z| \leq 1\)</span>:<br>
+<span class="math display">\[
+Y_t = \frac{c}{1 - \phi_1 - \phi_2 - \cdots - \phi_p} + \sum_{j=0}^\infty \psi_j \varepsilon_{t-j}.
+\]</span><br>
+Los coeficientes <span class="math inline">\(\psi_j\)</span> cumplen:<br>
+<span class="math display">\[
+\sum_{j=0}^\infty |\psi_j| &lt; \infty,
+\]</span><br>
+garantizando la convergencia de la serie y la estacionariedad del proceso.</p>
+</section>
+<section id="estacionariedad-de-los-procesos-arp" class="level3" data-number="3.10.5">
+<h3 data-number="3.10.5" class="anchored" data-anchor-id="estacionariedad-de-los-procesos-arp"><span class="header-section-number">3.10.5</span> Estacionariedad de los procesos AR(p)</h3>
+<p>Un proceso autorregresivo de orden <span class="math inline">\(p\)</span>, <strong>AR(</strong><span class="math inline">\(p\)</span>), puede representarse como un <strong>MA(</strong><span class="math inline">\(\infty\)</span>) bajo condiciones específicas de sus coeficientes. Esta representación es clave para demostrar su estacionariedad.</p>
+</section>
+<section id="condición-sobre-las-raíces-del-polinomio-característico" class="level3" data-number="3.10.6">
+<h3 data-number="3.10.6" class="anchored" data-anchor-id="condición-sobre-las-raíces-del-polinomio-característico"><span class="header-section-number">3.10.6</span> Condición sobre las raíces del polinomio característico</h3>
+<p>El polinomio característico asociado al proceso AR(<span class="math inline">\(p\)</span>) es:<br>
+<span class="math display">\[
+\Phi(z) = 1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_p z^p.
+\]</span><br>
+Para garantizar estacionariedad, <strong>todas las raíces</strong> <span class="math inline">\(z\)</span> de <span class="math inline">\(\Phi(z) = 0\)</span> deben ubicarse <strong>fuera del círculo unitario</strong> en el plano complejo:<br>
+<span class="math display">\[
+|z| &gt; 1.
+\]</span></p>
+</section>
+<section id="relación-con-procesos-mainfty" class="level3" data-number="3.10.7">
+<h3 data-number="3.10.7" class="anchored" data-anchor-id="relación-con-procesos-mainfty"><span class="header-section-number">3.10.7</span> Relación con procesos MA(<span class="math inline">\(\infty\)</span>)</h3>
+<p>Cuando se cumple la condición anterior:<br>
+1. El operador <span class="math inline">\(\Phi(B)\)</span> asociado al proceso AR(<span class="math inline">\(p\)</span>) es <strong>invertible</strong>.<br>
+2. El proceso puede expresarse como:<br>
+<span class="math display">\[
+   Y_t = \frac{c}{1 - \phi_1 - \phi_2 - \cdots - \phi_p} + \sum_{j=0}^\infty \psi_j \varepsilon_{t-j},
+   \]</span><br>
+donde los coeficientes <span class="math inline">\(\psi_j\)</span> son <strong>absolutamente sumables</strong>:<br>
+<span class="math display">\[
+   \sum_{j=0}^\infty |\psi_j| &lt; \infty.
+   \]</span></p>
+</section>
+<section id="estacionariedad" class="level3" data-number="3.10.8">
+<h3 data-number="3.10.8" class="anchored" data-anchor-id="estacionariedad"><span class="header-section-number">3.10.8</span> Estacionariedad</h3>
+<p>La representación MA(<span class="math inline">\(\infty\)</span>) asegura que el proceso AR(<span class="math inline">\(p\)</span>) es <strong>estacionario en covarianza</strong>, ya que:<br>
+- La media <span class="math inline">\(\mathbb{E}(Y_t)\)</span> es constante.<br>
+- Las autocovarianzas <span class="math inline">\(\gamma_j\)</span> dependen únicamente del lag <span class="math inline">\(j\)</span>.<br>
+- La convergencia de <span class="math inline">\(\sum \psi_j^2\)</span> garantiza varianza finita.</p>
+<p>Esta conexión subraya que la estacionariedad del AR(<span class="math inline">\(p\)</span>) está intrínsecamente ligada a la estructura de sus coeficientes y su polinomio característico.</p>
+<section id="ejemplo-3" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-3">Ejemplo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">### SEGUNDO EJEMPLO AR(4)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Simular un AR(4): Y_t = 0.5*Y_{t-1} - 0.3*Y_{t-2} + 0.2*Y_{t-3}</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># + 0.1*Y_{t-4} + e_t</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ar4 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>)))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar la serie</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ar4, <span class="at">main =</span> <span class="st">"Serie de tiempo"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Y_t"</span>, <span class="at">col =</span> <span class="st">"#F4B4C9"</span>, <span class="at">lwd =</span> <span class="dv">1</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma (ACF)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ar4, <span class="at">main =</span> <span class="st">"ACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlograma parcial (PACF)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(ar4, <span class="at">main =</span> <span class="st">"PACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="procesos-autorregresivos-media-móvil-armap-q" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="procesos-autorregresivos-media-móvil-armap-q"><span class="header-section-number">3.11</span> Procesos Autorregresivos-Media Móvil (ARMA(p, q))</h2>
+<p>Un proceso <strong>ARMA(p, q)</strong> combina componentes autorregresivos (AR) y de media móvil (MA) en una única ecuación:<br>
+<span class="math display">\[
+Y_t = c + \phi_1 Y_{t-1} + \cdots + \phi_p Y_{t-p} + \epsilon_t + \theta_1 \epsilon_{t-1} + \cdots + \theta_q \epsilon_{t-q},
+\]</span><br>
+donde:<br>
+- <span class="math inline">\(\{\epsilon_t\}\)</span>: Ruido blanco con distribución <span class="math inline">\(N(0, \sigma^2)\)</span>.<br>
+- <span class="math inline">\(c\)</span>: Término constante que ajusta el nivel base de la serie.<br>
+- <span class="math inline">\(\phi_1, \ldots, \phi_p\)</span>: Coeficientes autorregresivos que vinculan <span class="math inline">\(Y_t\)</span> con sus valores pasados.<br>
+- <span class="math inline">\(\theta_1, \ldots, \theta_q\)</span>: Coeficientes de media móvil que ponderan los errores pasados.</p>
+<section id="estacionariedad-1" class="level3" data-number="3.11.1">
+<h3 data-number="3.11.1" class="anchored" data-anchor-id="estacionariedad-1"><span class="header-section-number">3.11.1</span> Estacionariedad</h3>
+<p>La estacionariedad del proceso ARMA(p, q) depende exclusivamente de los <strong>coeficientes autorregresivos</strong> (<span class="math inline">\(\phi_j\)</span>). Para garantizarla, todas las raíces del polinomio característico:<br>
+<span class="math display">\[
+\Phi(z) = 1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_p z^p,
+\]</span><br>
+deben ubicarse <strong>fuera del círculo unitario</strong> (<span class="math inline">\(|z| &gt; 1\)</span>). Esta condición es idéntica a la requerida para los procesos AR(p).</p>
+</section>
+<section id="comportamiento-de-los-correlogramas-1" class="level3" data-number="3.11.2">
+<h3 data-number="3.11.2" class="anchored" data-anchor-id="comportamiento-de-los-correlogramas-1"><span class="header-section-number">3.11.2</span> Comportamiento de los correlogramas</h3>
+<ul>
+<li><strong>Función de Autocorrelación (ACF)</strong>: Decae de manera exponencial o sinusoidal, sin cortes abruptos.<br>
+</li>
+<li><strong>Función de Autocorrelación Parcial (PACF)</strong>: También muestra un decaimiento gradual, similar al de la ACF.</li>
+</ul>
+<p>Estos patrones dificultan la identificación directa de los órdenes <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span>, ya que no presentan cortes claros. Por ello, se requieren técnicas complementarias, como el uso de <strong>correlaciones extendidas</strong> o criterios de información (AIC, BIC), para determinar los valores óptimos de <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span>.</p>
+<p>Los modelos ARMA(p, q) son herramientas versátiles para modelar series temporales con dependencias mixtas, capturando tanto la influencia de observaciones pasadas como la de shocks recientes. Su aplicación es fundamental en campos como econometría y forecasting.</p>
+</section>
+<section id="representación-ma-de-un-proceso-armap-q" class="level3" data-number="3.11.3">
+<h3 data-number="3.11.3" class="anchored" data-anchor-id="representación-ma-de-un-proceso-armap-q"><span class="header-section-number">3.11.3</span> Representación MA(∞) de un proceso ARMA(p, q)</h3>
+<p>Un proceso <strong>ARMA(p, q)</strong> puede expresarse mediante operadores de retardo <span class="math inline">\(B\)</span> (<span class="math inline">\(B^k Y_t = Y_{t-k}\)</span>) como:<br>
+<span class="math display">\[
+\Phi(B) Y_t = c + \Theta(B) \varepsilon_t,
+\]</span><br>
+donde:<br>
+- <span class="math inline">\(\Phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p\)</span> (componente AR),<br>
+- <span class="math inline">\(\Theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q\)</span> (componente MA).</p>
+</section>
+<section id="condición-de-estacionariedad-1" class="level3" data-number="3.11.4">
+<h3 data-number="3.11.4" class="anchored" data-anchor-id="condición-de-estacionariedad-1"><span class="header-section-number">3.11.4</span> Condición de estacionariedad</h3>
+<p>La estacionariedad del modelo depende de la <strong>componente autorregresiva (AR)</strong>. Para garantizarla:<br>
+- Todas las raíces <span class="math inline">\(z\)</span> del polinomio <span class="math inline">\(\Phi(z) = 1 - \phi_1 z - \cdots - \phi_p z^p\)</span> deben cumplir <span class="math inline">\(|z| &gt; 1\)</span>.<br>
+- Esto asegura que <span class="math inline">\(\Phi(B)\)</span> sea invertible dentro del círculo unitario, permitiendo una representación MA(∞).</p>
+</section>
+<section id="expansión-en-ma" class="level3" data-number="3.11.5">
+<h3 data-number="3.11.5" class="anchored" data-anchor-id="expansión-en-ma"><span class="header-section-number">3.11.5</span> Expansión en MA(∞)</h3>
+<p>Si se satisface la condición anterior, el proceso ARMA(p, q) admite una representación de <strong>media móvil infinita</strong>:<br>
+<span class="math display">\[
+Y_t = \frac{c}{1 - \phi_1 - \cdots - \phi_p} + \sum_{j=0}^\infty \psi_j \varepsilon_{t-j},
+\]</span><br>
+donde:<br>
+- <span class="math inline">\(\mu = \frac{c}{1 - \phi_1 - \cdots - \phi_p}\)</span>: Media constante del proceso.<br>
+- <span class="math inline">\(\psi_j\)</span>: Coeficientes obtenidos de la relación <span class="math inline">\(\frac{\Theta(B)}{\Phi(B)}\)</span>, que cumplen <span class="math inline">\(\sum_{j=0}^\infty |\psi_j| &lt; \infty\)</span>.</p>
+</section>
+<section id="estacionariedad-2" class="level3" data-number="3.11.6">
+<h3 data-number="3.11.6" class="anchored" data-anchor-id="estacionariedad-2"><span class="header-section-number">3.11.6</span> Estacionariedad</h3>
+<p>La convergencia absoluta de los coeficientes <span class="math inline">\(\psi_j\)</span> garantiza:<br>
+- Varianza finita: <span class="math inline">\(\gamma_0 = \sigma^2 \sum_{j=0}^\infty \psi_j^2 &lt; \infty\)</span>.<br>
+- Autocovarianzas dependientes solo del lag <span class="math inline">\(j\)</span>: <span class="math inline">\(\gamma_j = \sigma^2 \sum_{k=0}^\infty \psi_k \psi_{k+j}\)</span>.</p>
+<p>Esta estructura asegura que el proceso ARMA(p, q) sea <strong>estacionario en covarianza</strong> bajo las condiciones mencionadas.</p>
+</section>
+<section id="características-de-los-procesos-armap-q" class="level3" data-number="3.11.7">
+<h3 data-number="3.11.7" class="anchored" data-anchor-id="características-de-los-procesos-armap-q"><span class="header-section-number">3.11.7</span> Características de los procesos ARMA(p, q)</h3>
+<section id="valor-esperado-3" class="level4">
+<h4 class="anchored" data-anchor-id="valor-esperado-3">Valor esperado</h4>
+<p>La media de un proceso ARMA(p, q) se obtiene mediante su representación como MA(∞) y está dada por:<br>
+<span class="math display">\[
+\mathbb{E}(Y_t) = \frac{c}{1 - \phi_1 - \phi_2 - \cdots - \phi_p}.
+\]</span><br>
+Esta expresión refleja el equilibrio entre el término constante <span class="math inline">\(c\)</span> y la suma de los coeficientes autorregresivos (<span class="math inline">\(\phi_j\)</span>), garantizando una media constante en el tiempo.</p>
+</section>
+<section id="varianza-y-autocovarianzas" class="level4">
+<h4 class="anchored" data-anchor-id="varianza-y-autocovarianzas">Varianza y autocovarianzas</h4>
+<p>Para calcular la varianza (<span class="math inline">\(\gamma_0\)</span>) y las autocovarianzas (<span class="math inline">\(\gamma_j\)</span>), se analizan las desviaciones del proceso respecto a su media (<span class="math inline">\(\tilde{Y}_t = Y_t - \mathbb{E}(Y_t)\)</span>).</p>
+<ul>
+<li><p><strong>Para</strong> <span class="math inline">\(j \geq q + 1\)</span>:<br>
+Las autocovarianzas siguen una relación recursiva derivada de la componente AR:<br>
+<span class="math display">\[
+\gamma_j = \phi_1 \gamma_{j-1} + \phi_2 \gamma_{j-2} + \cdots + \phi_p \gamma_{j-p}.
+\]</span></p></li>
+<li><p><strong>Para</strong> <span class="math inline">\(j &lt; q + 1\)</span>:<br>
+El cálculo se complica debido a la correlación entre los errores (<span class="math inline">\(\varepsilon_{t-j}\)</span>) y los valores pasados de <span class="math inline">\(Y_t\)</span>. Esto requiere resolver un sistema de ecuaciones que integra tanto los coeficientes AR (<span class="math inline">\(\phi_j\)</span>) como los MA (<span class="math inline">\(\theta_j\)</span>).</p></li>
+</ul>
+<p>La <strong>varianza</strong> (<span class="math inline">\(\gamma_0\)</span>) y las autocovarianzas iniciales (<span class="math inline">\(\gamma_1, \ldots, \gamma_q\)</span>) no pueden derivarse directamente de la recursión y dependen de interacciones específicas entre los componentes AR y MA.</p>
+<p><strong>Nota:</strong> Las ecuaciones de Yule-Walker adaptadas para modelos ARMA permiten calcular estas cantidades, aunque su resolución exige métodos numéricos avanzados.</p>
+</section>
+</section>
+<section id="caso-particular-proceso-arma1-1" class="level3" data-number="3.11.8">
+<h3 data-number="3.11.8" class="anchored" data-anchor-id="caso-particular-proceso-arma1-1"><span class="header-section-number">3.11.8</span> Caso particular: Proceso ARMA(1, 1)</h3>
+<p>Un proceso <strong>ARMA(1, 1)</strong> se define mediante la ecuación:<br>
+<span class="math display">\[
+Y_t = \phi Y_{t-1} + \varepsilon_t + \theta \varepsilon_{t-1},
+\]</span><br>
+donde <span class="math inline">\(\varepsilon_t \sim N(0, \sigma^2)\)</span> es ruido blanco.</p>
+<section id="valor-esperado-4" class="level4">
+<h4 class="anchored" data-anchor-id="valor-esperado-4">Valor esperado</h4>
+<p>Dado que el modelo no incluye un término constante explícito, la <strong>media</strong> del proceso es:<br>
+<span class="math display">\[
+\mathbb{E}(Y_t) = 0.
+\]</span></p>
+</section>
+<section id="representación-ma" class="level4">
+<h4 class="anchored" data-anchor-id="representación-ma">Representación MA(∞)</h4>
+<p>Utilizando el operador de retardo <span class="math inline">\(B\)</span> (<span class="math inline">\(B^k Y_t = Y_{t-k}\)</span>), el proceso puede reescribirse como:<br>
+<span class="math display">\[
+Y_t = (1 + \phi B + \phi^2 B^2 + \cdots)(1 + \theta B) \varepsilon_t.
+\]</span><br>
+Al expandir esta expresión, obtenemos:<br>
+<span class="math display">\[
+Y_t = \varepsilon_t + (\phi + \theta) \sum_{i=1}^\infty \phi^{i-1} \varepsilon_{t-i}.
+\]</span></p>
+</section>
+<section id="varianza-4" class="level4">
+<h4 class="anchored" data-anchor-id="varianza-4">Varianza</h4>
+<p>La varianza de <span class="math inline">\(Y_t\)</span> se calcula considerando la contribución de todos los términos de la serie:<br>
+<span class="math display">\[
+\begin{aligned}
+\text{Var}(Y_t) &amp;= \sigma^2 + (\phi + \theta)^2 \sum_{i=1}^\infty \phi^{2(i-1)} \sigma^2 \\
+&amp;= \sigma^2 \left( 1 + (\phi + \theta)^2 \cdot \frac{1}{1 - \phi^2} \right) \quad \text{(serie geométrica)} \\
+&amp;= \sigma^2 \left( 1 + \frac{(\phi + \theta)^2}{1 - \phi^2} \right).
+\end{aligned}
+\]</span></p>
+<p><strong>Nota</strong>: La expresión anterior supone <span class="math inline">\(|\phi| &lt; 1\)</span> para garantizar la convergencia de la serie geométrica. Este resultado subraya cómo la varianza depende tanto de los coeficientes autorregresivos (<span class="math inline">\(\phi\)</span>) como de los de media móvil (<span class="math inline">\(\theta\)</span>).</p>
+</section>
+</section>
+<section id="cálculo-de-autocovarianzas-para-el-proceso-arma1-1" class="level3" data-number="3.11.9">
+<h3 data-number="3.11.9" class="anchored" data-anchor-id="cálculo-de-autocovarianzas-para-el-proceso-arma1-1"><span class="header-section-number">3.11.9</span> Cálculo de autocovarianzas para el proceso ARMA(1, 1)</h3>
+<p>Para calcular la autocovarianza <span class="math inline">\(\gamma_k = \mathbb{E}[Y_t Y_{t+k}]\)</span> en un modelo ARMA(1, 1), partimos de la representación MA(∞) del proceso:<br>
+<span class="math display">\[
+Y_t = \varepsilon_t + (\phi + \theta) \sum_{i=1}^\infty \phi^{i-1} \varepsilon_{t-i}.
+\]</span></p>
+<p>Al multiplicar <span class="math inline">\(Y_t\)</span> y <span class="math inline">\(Y_{t+k}\)</span>, obtenemos:<br>
+<span class="math display">\[
+Y_t Y_{t+k} = \left( \varepsilon_t + (\phi + \theta) \sum_{i=1}^\infty \phi^{i-1} \varepsilon_{t-i} \right) \left( \varepsilon_{t+k} + (\phi + \theta) \sum_{j=1}^\infty \phi^{j-1} \varepsilon_{t+k-j} \right).
+\]</span></p>
+<section id="simplificación-de-la-esperanza" class="level4">
+<h4 class="anchored" data-anchor-id="simplificación-de-la-esperanza">Simplificación de la esperanza</h4>
+<p>Dado que los errores <span class="math inline">\(\varepsilon_t\)</span> son independientes (<span class="math inline">\(\mathbb{E}[\varepsilon_t \varepsilon_s] = 0\)</span> para <span class="math inline">\(t \neq s\)</span>), solo sobreviven los términos donde los índices coinciden. Al tomar esperanza:</p>
+<p><span class="math display">\[
+\mathbb{E}[Y_t Y_{t+k}] = (\phi + \theta) \phi^{k-1} \sigma^2 + (\phi + \theta)^2 \sigma^2 \phi^k \sum_{i=1}^\infty \phi^{2(i-1)}.
+\]</span></p>
+<ol type="1">
+<li><p><strong>Primer término</strong>:<br>
+Corresponde a la contribución directa de los errores alineados en el lag <span class="math inline">\(k\)</span>:<br>
+<span class="math display">\[
+(\phi + \theta) \phi^{k-1} \sigma^2.
+\]</span></p></li>
+<li><p><strong>Segundo término</strong>:<br>
+Involucra la serie geométrica generada por la interacción de los coeficientes:<br>
+<span class="math display">\[
+(\phi + \theta)^2 \sigma^2 \phi^k \cdot \frac{1}{1 - \phi^2} \quad \text{(suponiendo } |\phi| &lt; 1 \text{)}.
+\]</span></p></li>
+</ol>
+</section>
+<section id="expresión-final-de-la-autocovarianza" class="level4">
+<h4 class="anchored" data-anchor-id="expresión-final-de-la-autocovarianza">Expresión final de la autocovarianza</h4>
+<p>Combinando ambos términos:<br>
+<span class="math display">\[
+\gamma_k = \sigma^2 \phi^{k-1} (\phi + \theta) \left( 1 + \frac{\phi (\phi + \theta)}{1 - \phi^2} \right).
+\]</span></p>
+<p><strong>Simplificación adicional</strong>:<br>
+Para <span class="math inline">\(k = 0\)</span>, esto se reduce a la varianza previamente calculada:<br>
+<span class="math display">\[
+\gamma_0 = \sigma^2 \left( 1 + \frac{(\phi + \theta)^2}{1 - \phi^2} \right).
+\]</span></p>
+<p>Para <span class="math inline">\(k \geq 1\)</span>, la autocovarianza decae exponencialmente con el lag <span class="math inline">\(k\)</span>, característica típica de los procesos ARMA.</p>
+<p><strong>Nota</strong>: La condición <span class="math inline">\(|\phi| &lt; 1\)</span> es esencial para garantizar la convergencia de la serie geométrica y, por ende, la estacionariedad del proceso.</p>
+<p>La <strong>k-ésima autocorrelación</strong> (<span class="math inline">\(\rho_k\)</span>) se obtiene al dividir la autocovarianza <span class="math inline">\(\gamma_k\)</span> entre la varianza <span class="math inline">\(\gamma_0\)</span>:<br>
+<span class="math display">\[
+\rho_k = \frac{\phi^{k-1}(\phi + \theta) \left( 1 + \frac{\phi(\phi+\theta)}{1+\phi^2} \right)}{1 + \frac{(\phi+\theta)^2}{1+\phi^2}}.
+\]</span></p>
+<p>De esta expresión, se deduce que las autocorrelaciones siguen una <strong>relación recursiva</strong>:<br>
+<span class="math display">\[
+\rho_k = \phi \rho_{k-1} \quad \text{para } k \geq 1.
+\]</span></p>
+<p>Esta relación refleja que el decaimiento de las autocorrelaciones está gobernado por el coeficiente autorregresivo <span class="math inline">\(\phi\)</span>, independientemente del lag <span class="math inline">\(k\)</span>.</p>
+</section>
+<section id="ejemplo-4" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-4">Ejemplo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">### ARMA(1,1) Y_t = 0.6 Y_{t-1} + e_t - 0.4e_{t-1}</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>arma11 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">500</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.6</span>, <span class="at">ma =</span> <span class="sc">-</span><span class="fl">0.4</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar series</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(arma11, <span class="at">main =</span> <span class="st">"Serie de tiempo"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Y_t"</span>, <span class="at">col =</span> <span class="st">"#F4B4C9"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF y PACF</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(arma11, <span class="at">main =</span> <span class="st">"ACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(arma11, <span class="at">main =</span> <span class="st">"PACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ejemplo-5" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-5">Ejemplo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">### ARMA (2,2) Y_t = 0.6 Y_{t-1} + 0.3 Y_{t-2} + e_t  </span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># - 0.4e_{t-1} - 0.3 e_{t-2}</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>arma22 <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">500</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="fl">0.3</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.4</span>, <span class="sc">-</span><span class="fl">0.3</span>)))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar series</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(arma22, <span class="at">main =</span> <span class="st">"Serie de tiempo"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Y_t"</span>, <span class="at">col =</span> <span class="st">"#F4B4C9"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF y PACF</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(arma22, <span class="at">main =</span> <span class="st">"ACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(arma22, <span class="at">main =</span> <span class="st">"PACF"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-Modelos-lineales-para-series-de-tiempo-estacionarias_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="motivación-ejemplo-de-diferenciación-para-eliminar-tendencias" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="motivación-ejemplo-de-diferenciación-para-eliminar-tendencias"><span class="header-section-number">3.12</span> Motivación: Ejemplo de diferenciación para eliminar tendencias</h2>
+<section id="serie-con-tendencia-lineal" class="level3" data-number="3.12.1">
+<h3 data-number="3.12.1" class="anchored" data-anchor-id="serie-con-tendencia-lineal"><span class="header-section-number">3.12.1</span> Serie con tendencia lineal</h3>
+<p>Considere una serie temporal <span class="math inline">\(\{Y_t\}\)</span> definida como:<br>
+<span class="math display">\[
+Y_t = a + bt + \varepsilon_t, \quad \varepsilon_t \sim N(0, \sigma^2).
+\]</span><br>
+Esta serie no es estacionaria debido a la tendencia lineal <span class="math inline">\(bt\)</span>.</p>
+<p><strong>Primera diferencia</strong>:<br>
+<span class="math display">\[
+(1 - B)Y_t = Y_t - Y_{t-1} = b + (\varepsilon_t - \varepsilon_{t-1}).
+\]</span><br>
+La tendencia lineal desaparece, y la serie diferenciada <span class="math inline">\((1 - B)Y_t\)</span> es estacionaria.</p>
+</section>
+<section id="serie-con-tendencia-cuadrática" class="level3" data-number="3.12.2">
+<h3 data-number="3.12.2" class="anchored" data-anchor-id="serie-con-tendencia-cuadrática"><span class="header-section-number">3.12.2</span> Serie con tendencia cuadrática</h3>
+<p>Si la serie incluye una tendencia cuadrática:<br>
+<span class="math display">\[
+Y_t = a + bt + ct^2 + \varepsilon_t, \quad \varepsilon_t \sim N(0, \sigma^2).
+\]</span></p>
+<p><strong>Primera diferencia</strong>:<br>
+<span class="math display">\[
+(1 - B)Y_t = Y_t - Y_{t-1} = b + c(2t - 1) + (\varepsilon_t - \varepsilon_{t-1}).
+\]</span><br>
+La tendencia residual <span class="math inline">\(c(2t - 1)\)</span> aún persiste.</p>
+<p><strong>Segunda diferencia</strong>:<br>
+<span class="math display">\[
+(1 - B)^2 Y_t = Y_t - 2Y_{t-1} + Y_{t-2}.
+\]</span><br>
+Al aplicar la segunda diferencia, se elimina la tendencia cuadrática, resultando en una serie estacionaria <span class="math inline">\((1 - B)^2 Y_t\)</span>.</p>
+<hr>
+</section>
+</section>
+<section id="proceso-autorregresivo-integrado-de-medias-móviles-arima" class="level2" data-number="3.13">
+<h2 data-number="3.13" class="anchored" data-anchor-id="proceso-autorregresivo-integrado-de-medias-móviles-arima"><span class="header-section-number">3.13</span> Proceso autorregresivo integrado de medias móviles (ARIMA)</h2>
+<p>Un proceso <strong>ARIMA(p, d, q)</strong> se emplea para modelar series temporales no estacionarias que pueden transformarse en estacionarias mediante diferenciación. Una serie <span class="math inline">\(\{Y_t\}\)</span> se clasifica como <strong>no estacionaria homogénea</strong> si, aunque no es estacionaria en su forma original, al aplicar diferencias de orden <span class="math inline">\(d\)</span>:<br>
+<span class="math display">\[
+w_t = (1 - B)^d Y_t,
+\]</span><br>
+se obtiene una serie <span class="math inline">\(\{w_t\}\)</span> estacionaria. Aquí, <span class="math inline">\(B\)</span> denota el operador de retardo (<span class="math inline">\(B Y_t = Y_{t-1}\)</span>).</p>
+<p>El modelo ARIMA(p, d, q) se define mediante la ecuación:<br>
+<span class="math display">\[
+\Phi(B)(1 - B)^d Y_t = \delta + \Theta(B) \varepsilon_t,
+\]</span><br>
+donde:<br>
+- <span class="math inline">\(\Phi(B) = 1 - \phi_1 B - \phi_2 B^2 - \cdots - \phi_p B^p\)</span> representa el componente autorregresivo de orden <span class="math inline">\(p\)</span>.<br>
+- <span class="math inline">\(\Theta(B) = 1 + \theta_1 B + \theta_2 B^2 + \cdots + \theta_q B^q\)</span> corresponde al componente de medias móviles de orden <span class="math inline">\(q\)</span>.<br>
+- <span class="math inline">\((1 - B)^d\)</span> es el operador de diferenciación de orden <span class="math inline">\(d\)</span>, que elimina tendencias o patrones no estacionarios.<br>
+- <span class="math inline">\(\delta\)</span> es un término constante ajustado tras la diferenciación.<br>
+- <span class="math inline">\(\varepsilon_t \sim N(0, \sigma^2)\)</span> es ruido blanco.</p>
+<p>El proceso de modelado implica tres etapas principales: diferenciar la serie <span class="math inline">\(d\)</span> veces para lograr estacionariedad, identificar los órdenes <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> para el modelo ARMA aplicado a la serie diferenciada, y finalmente estimar y validar los parámetros del modelo.</p>
+<p>Este enfoque integra la capacidad de los modelos ARMA para capturar dependencias en series estacionarias, combinándola con la diferenciación para manejar no estacionariedades en los datos originales.</p>
+<hr>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-abraham83" class="csl-entry" role="listitem">
+Abraham, Bovas, y Johannes Ledolter. 1983. <em>Statistical Methods for Forecasting</em>. 1.ª ed. New Jersey: Wiley.
+</div>
+<div id="ref-cowper09" class="csl-entry" role="listitem">
+Cowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. <em>Introductory Time Series with R</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.
+</div>
+<div id="ref-enders15" class="csl-entry" role="listitem">
+Enders, Walter. 2015. <em>Applied Econometric Time Series</em>. 1.ª ed. New York: Wiley.
+</div>
+<div id="ref-hamilton15" class="csl-entry" role="listitem">
+Hamilton, J. D. 2020. <em>Times series Analysis</em>. 1.ª ed. Wiley.
+</div>
+<div id="ref-montgomery08" class="csl-entry" role="listitem">
+Montgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. <em>Introduction to Time Series Analysis and Forecasting</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Caps/02-Series de Tiempo.html" class="pagination-link" aria-label="Series de Tiempo">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Caps/04-Ajuste del modelo a una serie de tiempo.html" class="pagination-link" aria-label="Ajuste del modelo a una serie de tiempo">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ajuste del modelo a una serie de tiempo</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,146 +1,24 @@
 {
     "sources": [
         {
-            "ISBN": "0471816434",
-            "author": [
-                {
-                    "family": "Bates",
-                    "given": "Douglas M."
-                },
-                {
-                    "family": "Watts",
-                    "given": "Donald G."
-                }
-            ],
-            "collection-title": "Wiley series in probability and mathematical statistics. Applied probability and statistics",
-            "id": "douglass88",
-            "issued": {
-                "date-parts": [
-                    [
-                        1988
-                    ]
-                ]
-            },
-            "publisher": "Wiley",
-            "publisher-place": "New York",
-            "title": "Nonlinear regression analysis and its applications",
-            "type": "book"
-        },
-        {
-            "ISBN": "0471533874",
+            "ISBN": "9780471653974",
             "author": [
                 {
                     "family": "Montgomery",
                     "given": "Douglas C."
                 },
                 {
-                    "family": "Peck",
-                    "given": "Elizabeth A."
+                    "family": "Jennings",
+                    "given": "Cheryl L."
                 },
                 {
-                    "family": "Vining",
-                    "given": "G. Geoffrey"
+                    "family": "Kulahci",
+                    "given": "Murat"
                 }
             ],
             "collection-title": "Wiley series in probability and mathematical statistics. Applied probability and statistics",
-            "edition": "5",
-            "id": "montgomery92",
-            "issued": {
-                "date-parts": [
-                    [
-                        2012
-                    ]
-                ]
-            },
-            "publisher": "Wiley",
-            "publisher-place": "New York",
-            "title": "Introduction to linear regression analysis",
-            "type": "book"
-        },
-        {
-            "author": [
-                {
-                    "family": "Ruckstuhl",
-                    "given": "Andreas"
-                }
-            ],
-            "id": "ruckstuhl10",
-            "issued": {
-                "date-parts": [
-                    [
-                        2010
-                    ]
-                ]
-            },
-            "note": "Course material for the nonlinear regression block in the Weiterbildungslehrgang (WBL) in angewandter Statistik at ETH Zurich",
-            "publisher": "IDP Institut für Datenanalyse und Prozessdesign, ZHAW Zürcher Hochschule für Angewandte Wissenschaften",
-            "title": "Introduction to nonlinear regression",
-            "type": "report"
-        },
-        {
-            "author": [
-                {
-                    "family": "Seber",
-                    "given": "G. A. F"
-                },
-                {
-                    "family": "J.",
-                    "given": "Wild C."
-                }
-            ],
-            "collection-title": "Wiley series in probability and mathematical statistics. Applied probability and statistics",
-            "id": "seber03",
-            "issued": {
-                "date-parts": [
-                    [
-                        2003
-                    ]
-                ]
-            },
-            "publisher": "John Wiley & Sons",
-            "publisher-place": "New York",
-            "title": "Nonlinear regression",
-            "type": "book"
-        },
-        {
-            "author": [
-                {
-                    "family": "Schabenberger",
-                    "given": "Oliver"
-                },
-                {
-                    "family": "Pierce",
-                    "given": "Francis J."
-                }
-            ],
-            "id": "Schabenberger2002",
-            "issued": {
-                "date-parts": [
-                    [
-                        2002
-                    ]
-                ]
-            },
-            "note": "Books",
-            "publisher": "Taylor & Francis, CRC Press",
-            "title": "Contemporary statistical models for the plant and soil sciences",
-            "type": "book"
-        },
-        {
-            "DOI": "10.1007/978-0-387-09616-2",
-            "ISBN": "978-0-387-09616-2",
-            "author": [
-                {
-                    "family": "Ritz",
-                    "given": "Christian"
-                },
-                {
-                    "family": "Streibig",
-                    "given": "Jens C."
-                }
-            ],
-            "collection-title": "Use R!",
-            "id": "Ritz2008",
+            "edition": "1",
+            "id": "montgomery08",
             "issued": {
                 "date-parts": [
                     [
@@ -148,47 +26,104 @@
                     ]
                 ]
             },
-            "publisher": "Springer",
+            "publisher": "Wiley",
             "publisher-place": "New York",
-            "title": "Nonlinear regression with R",
+            "title": "Introduction to time series analysis and forecasting",
             "type": "book"
         },
         {
-            "DOI": "10.1080/00949655.2013.766188",
-            "URL": "https://doi.org/10.1080/00949655.2013.766188\n",
+            "ISBN": "9780387886978",
             "author": [
                 {
-                    "family": "Garay",
-                    "given": "Aldo M."
+                    "family": "Cowpertwait",
+                    "given": "Paul S. P."
                 },
                 {
-                    "family": "Lachos",
-                    "given": "Víctor H."
-                },
-                {
-                    "family": "Labra",
-                    "given": "Filidor V."
-                },
-                {
-                    "family": "and",
-                    "given": "Edwin M. M. Ortega"
+                    "family": "Metcalfe",
+                    "given": "Andrew V."
                 }
             ],
-            "container-title": "Journal of Statistical Computation and Simulation",
-            "id": "Garay03082014",
-            "issue": "8",
+            "collection-title": "Wiley series in probability and mathematical statistics. Applied probability and statistics",
+            "edition": "1",
+            "id": "cowper09",
             "issued": {
                 "date-parts": [
                     [
-                        2014
+                        2009
                     ]
                 ]
             },
-            "page": "1761-1778",
-            "publisher": "Taylor & Francis",
-            "title": "Statistical diagnostics for nonlinear regression models based on scale mixtures of skew-normal distributions",
-            "type": "article-journal",
-            "volume": "84"
+            "publisher": "Springer",
+            "publisher-place": "Baltimore",
+            "title": "Introductory time series with r",
+            "type": "book"
+        },
+        {
+            "ISBN": "139780471769873",
+            "author": [
+                {
+                    "family": "Abraham",
+                    "given": "Bovas"
+                },
+                {
+                    "family": "Ledolter",
+                    "given": "Johannes"
+                }
+            ],
+            "edition": "1",
+            "id": "abraham83",
+            "issued": {
+                "date-parts": [
+                    [
+                        1983
+                    ]
+                ]
+            },
+            "publisher": "Wiley",
+            "publisher-place": "New Jersey",
+            "title": "Statistical methods for forecasting",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Enders",
+                    "given": "Walter"
+                }
+            ],
+            "edition": "1",
+            "id": "enders15",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "publisher": "Wiley",
+            "publisher-place": "New York",
+            "title": "Applied econometric time series",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Hamilton",
+                    "given": "J. D."
+                }
+            ],
+            "edition": "1",
+            "id": "hamilton15",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "Wiley",
+            "title": "Times series analysis",
+            "type": "book"
         }
     ],
     "project_biblios": [

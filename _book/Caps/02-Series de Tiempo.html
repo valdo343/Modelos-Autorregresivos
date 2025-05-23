@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Series de Tiempo – Modelos Autoregresivos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Caps/03-Modelos lineales para series de tiempo estacionarias.html" rel="next">
+<link href="../Caps/01-Introduccion.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8da5b4427184b79ecddefad3d342027e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Caps/02-Series de Tiempo.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Modelos Autoregresivos</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Presentación</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/01-Introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/02-Series de Tiempo.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/03-Modelos lineales para series de tiempo estacionarias.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelos lineales para series de tiempo estacionarias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/04-Ajuste del modelo a una serie de tiempo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ajuste del modelo a una serie de tiempo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Caps/05-Caso de estudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Casos de Estudios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referencias</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#qué-es-una-serie-de-tiempo" id="toc-qué-es-una-serie-de-tiempo" class="nav-link active" data-scroll-target="#qué-es-una-serie-de-tiempo"><span class="header-section-number">2.1</span> ¿Qué es una Serie de Tiempo?</a></li>
+  <li><a href="#fundamento-estructura-y-componentes" id="toc-fundamento-estructura-y-componentes" class="nav-link" data-scroll-target="#fundamento-estructura-y-componentes"><span class="header-section-number">2.2</span> Fundamento, estructura y componentes</a>
+  <ul class="collapse">
+  <li><a href="#definición" id="toc-definición" class="nav-link" data-scroll-target="#definición"><span class="header-section-number">2.2.1</span> Definición</a></li>
+  <li><a href="#elementos-clave" id="toc-elementos-clave" class="nav-link" data-scroll-target="#elementos-clave"><span class="header-section-number">2.2.2</span> Elementos Clave</a></li>
+  </ul></li>
+  <li><a href="#componentes-fundamentales" id="toc-componentes-fundamentales" class="nav-link" data-scroll-target="#componentes-fundamentales"><span class="header-section-number">2.3</span> Componentes fundamentales</a>
+  <ul class="collapse">
+  <li><a href="#tendencia" id="toc-tendencia" class="nav-link" data-scroll-target="#tendencia"><span class="header-section-number">2.3.1</span> Tendencia</a></li>
+  <li><a href="#estacionalidad" id="toc-estacionalidad" class="nav-link" data-scroll-target="#estacionalidad"><span class="header-section-number">2.3.2</span> Estacionalidad</a></li>
+  <li><a href="#ciclos" id="toc-ciclos" class="nav-link" data-scroll-target="#ciclos"><span class="header-section-number">2.3.3</span> Ciclos</a></li>
+  <li><a href="#irregularidad" id="toc-irregularidad" class="nav-link" data-scroll-target="#irregularidad"><span class="header-section-number">2.3.4</span> Irregularidad</a></li>
+  </ul></li>
+  <li><a href="#esperanza-de-una-serie-de-tiempo" id="toc-esperanza-de-una-serie-de-tiempo" class="nav-link" data-scroll-target="#esperanza-de-una-serie-de-tiempo"><span class="header-section-number">2.4</span> Esperanza de una serie de Tiempo</a>
+  <ul class="collapse">
+  <li><a href="#casos-de-estudio" id="toc-casos-de-estudio" class="nav-link" data-scroll-target="#casos-de-estudio"><span class="header-section-number">2.4.1</span> Casos de Estudio</a></li>
+  <li><a href="#propiedades-clave" id="toc-propiedades-clave" class="nav-link" data-scroll-target="#propiedades-clave"><span class="header-section-number">2.4.2</span> Propiedades Clave</a></li>
+  </ul></li>
+  <li><a href="#autocovarianza-de-una-serie-de-tiempo" id="toc-autocovarianza-de-una-serie-de-tiempo" class="nav-link" data-scroll-target="#autocovarianza-de-una-serie-de-tiempo"><span class="header-section-number">2.5</span> Autocovarianza de una serie de Tiempo</a>
+  <ul class="collapse">
+  <li><a href="#interpretación" id="toc-interpretación" class="nav-link" data-scroll-target="#interpretación"><span class="header-section-number">2.5.1</span> Interpretación</a></li>
+  </ul></li>
+  <li><a href="#autcorrelación-de-una-serie-de-tiempo" id="toc-autcorrelación-de-una-serie-de-tiempo" class="nav-link" data-scroll-target="#autcorrelación-de-una-serie-de-tiempo"><span class="header-section-number">2.6</span> Autcorrelación de una serie de Tiempo</a>
+  <ul class="collapse">
+  <li><a href="#definición-del-coeficiente-de-autocorrelación" id="toc-definición-del-coeficiente-de-autocorrelación" class="nav-link" data-scroll-target="#definición-del-coeficiente-de-autocorrelación"><span class="header-section-number">2.6.1</span> Definición del Coeficiente de Autocorrelación</a></li>
+  <li><a href="#función-de-autocorrelación-acf" id="toc-función-de-autocorrelación-acf" class="nav-link" data-scroll-target="#función-de-autocorrelación-acf"><span class="header-section-number">2.6.2</span> Función de Autocorrelación (ACF)</a></li>
+  <li><a href="#cálculo-de-la-acf-muestral" id="toc-cálculo-de-la-acf-muestral" class="nav-link" data-scroll-target="#cálculo-de-la-acf-muestral"><span class="header-section-number">2.6.3</span> Cálculo de la ACF Muestral</a></li>
+  </ul></li>
+  <li><a href="#autocovarianza-y-autocorrelación-muestral" id="toc-autocovarianza-y-autocorrelación-muestral" class="nav-link" data-scroll-target="#autocovarianza-y-autocorrelación-muestral"><span class="header-section-number">2.7</span> Autocovarianza y Autocorrelación Muestral</a>
+  <ul class="collapse">
+  <li><a href="#estimación-de-la-autocovarianza" id="toc-estimación-de-la-autocovarianza" class="nav-link" data-scroll-target="#estimación-de-la-autocovarianza"><span class="header-section-number">2.7.1</span> Estimación de la Autocovarianza</a></li>
+  <li><a href="#función-de-autocorrelación-muestral-acf" id="toc-función-de-autocorrelación-muestral-acf" class="nav-link" data-scroll-target="#función-de-autocorrelación-muestral-acf"><span class="header-section-number">2.7.2</span> Función de Autocorrelación Muestral (ACF)</a></li>
+  <li><a href="#consideraciones-para-una-estimación-confiable" id="toc-consideraciones-para-una-estimación-confiable" class="nav-link" data-scroll-target="#consideraciones-para-una-estimación-confiable"><span class="header-section-number">2.7.3</span> Consideraciones para una Estimación Confiable</a></li>
+  <li><a href="#aplicaciones-en-el-análisis" id="toc-aplicaciones-en-el-análisis" class="nav-link" data-scroll-target="#aplicaciones-en-el-análisis"><span class="header-section-number">2.7.4</span> Aplicaciones en el Análisis</a></li>
+  </ul></li>
+  <li><a href="#autocorrelación-parcial-de-una-serie-de-tiempo" id="toc-autocorrelación-parcial-de-una-serie-de-tiempo" class="nav-link" data-scroll-target="#autocorrelación-parcial-de-una-serie-de-tiempo"><span class="header-section-number">2.8</span> Autocorrelación Parcial de una Serie de Tiempo</a>
+  <ul class="collapse">
+  <li><a href="#fundamentos-teóricos" id="toc-fundamentos-teóricos" class="nav-link" data-scroll-target="#fundamentos-teóricos"><span class="header-section-number">2.8.1</span> Fundamentos Teóricos</a></li>
+  <li><a href="#aplicación-a-series-de-tiempo" id="toc-aplicación-a-series-de-tiempo" class="nav-link" data-scroll-target="#aplicación-a-series-de-tiempo"><span class="header-section-number">2.8.2</span> Aplicación a Series de Tiempo</a></li>
+  <li><a href="#relevancia-en-modelado" id="toc-relevancia-en-modelado" class="nav-link" data-scroll-target="#relevancia-en-modelado"><span class="header-section-number">2.8.3</span> Relevancia en Modelado</a></li>
+  </ul></li>
+  <li><a href="#definición-formal-de-la-autocorrelación-parcial-y-ecuaciones-de-yule-walker" id="toc-definición-formal-de-la-autocorrelación-parcial-y-ecuaciones-de-yule-walker" class="nav-link" data-scroll-target="#definición-formal-de-la-autocorrelación-parcial-y-ecuaciones-de-yule-walker"><span class="header-section-number">2.9</span> Definición Formal de la Autocorrelación Parcial y Ecuaciones de Yule-Walker</a>
+  <ul class="collapse">
+  <li><a href="#ecuaciones-de-yule-walker-para-procesos-ar" id="toc-ecuaciones-de-yule-walker-para-procesos-ar" class="nav-link" data-scroll-target="#ecuaciones-de-yule-walker-para-procesos-ar"><span class="header-section-number">2.9.1</span> Ecuaciones de Yule-Walker para Procesos AR</a></li>
+  <li><a href="#notación-matricial" id="toc-notación-matricial" class="nav-link" data-scroll-target="#notación-matricial"><span class="header-section-number">2.9.2</span> Notación Matricial</a></li>
+  <li><a href="#solución-y-autocorrelación-parcial" id="toc-solución-y-autocorrelación-parcial" class="nav-link" data-scroll-target="#solución-y-autocorrelación-parcial"><span class="header-section-number">2.9.3</span> Solución y Autocorrelación Parcial</a></li>
+  <li><a href="#ejemplo-proceso-ar2" id="toc-ejemplo-proceso-ar2" class="nav-link" data-scroll-target="#ejemplo-proceso-ar2"><span class="header-section-number">2.9.4</span> Ejemplo: Proceso AR(2)</a></li>
+  <li><a href="#aplicación-en-identificación-de-modelos" id="toc-aplicación-en-identificación-de-modelos" class="nav-link" data-scroll-target="#aplicación-en-identificación-de-modelos"><span class="header-section-number">2.9.5</span> Aplicación en Identificación de Modelos</a></li>
+  </ul></li>
+  <li><a href="#estacionariedad-en-series-de-tiempo" id="toc-estacionariedad-en-series-de-tiempo" class="nav-link" data-scroll-target="#estacionariedad-en-series-de-tiempo"><span class="header-section-number">2.10</span> Estacionariedad en Series de Tiempo</a>
+  <ul class="collapse">
+  <li><a href="#condiciones-para-la-estacionariedad-débil" id="toc-condiciones-para-la-estacionariedad-débil" class="nav-link" data-scroll-target="#condiciones-para-la-estacionariedad-débil"><span class="header-section-number">2.10.1</span> Condiciones para la estacionariedad débil</a></li>
+  <li><a href="#prueba-de-dickey-fuller-validando-la-estacionariedad" id="toc-prueba-de-dickey-fuller-validando-la-estacionariedad" class="nav-link" data-scroll-target="#prueba-de-dickey-fuller-validando-la-estacionariedad"><span class="header-section-number">2.10.2</span> Prueba de Dickey-Fuller: Validando la estacionariedad</a></li>
+  <li><a href="#técnicas-para-lograr-estacionariedad" id="toc-técnicas-para-lograr-estacionariedad" class="nav-link" data-scroll-target="#técnicas-para-lograr-estacionariedad"><span class="header-section-number">2.10.3</span> Técnicas para lograr estacionariedad</a></li>
+  <li><a href="#estacionariedad-débil-vs.-estricta" id="toc-estacionariedad-débil-vs.-estricta" class="nav-link" data-scroll-target="#estacionariedad-débil-vs.-estricta"><span class="header-section-number">2.10.4</span> Estacionariedad débil vs.&nbsp;estricta</a></li>
+  </ul></li>
+  <li><a href="#ejemplos-ilustrativos-de-estacionariedad-en-series-de-tiempo" id="toc-ejemplos-ilustrativos-de-estacionariedad-en-series-de-tiempo" class="nav-link" data-scroll-target="#ejemplos-ilustrativos-de-estacionariedad-en-series-de-tiempo"><span class="header-section-number">2.11</span> Ejemplos ilustrativos de estacionariedad en series de tiempo</a>
+  <ul class="collapse">
+  <li><a href="#caso-estacionario" id="toc-caso-estacionario" class="nav-link" data-scroll-target="#caso-estacionario"><span class="header-section-number">2.11.1</span> Caso estacionario</a></li>
+  <li><a href="#caso-no-estacionario" id="toc-caso-no-estacionario" class="nav-link" data-scroll-target="#caso-no-estacionario"><span class="header-section-number">2.11.2</span> Caso no estacionario</a></li>
+  <li><a href="#comparación-clave" id="toc-comparación-clave" class="nav-link" data-scroll-target="#comparación-clave"><span class="header-section-number">2.11.3</span> Comparación clave</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="qué-es-una-serie-de-tiempo" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="qué-es-una-serie-de-tiempo"><span class="header-section-number">2.1</span> ¿Qué es una Serie de Tiempo?</h2>
+<p>Una serie de tiempo es una secuencia de observaciones numéricas registradas en intervalos regulares a lo largo del tiempo. Entre los ejemplos más comunes se encuentran las temperaturas mensuales en una ciudad, los precios diarios de acciones en la bolsa o las ventas trimestrales de un producto. Su característica distintiva es la dependencia temporal, es decir, que el valor actual suele estar influenciado por observaciones pasadas.</p>
+<hr>
+</section>
+<section id="fundamento-estructura-y-componentes" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="fundamento-estructura-y-componentes"><span class="header-section-number">2.2</span> Fundamento, estructura y componentes</h2>
+<section id="definición" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="definición"><span class="header-section-number">2.2.1</span> Definición</h3>
+<p>Formalmente, una serie de tiempo es una colección ordenada de datos cuantitativos observados en momentos sucesivos. Esta naturaleza cronológica implica que las observaciones no son independientes, sino que tienden a mostrar correlaciones a lo largo del tiempo.</p>
+</section>
+<section id="elementos-clave" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="elementos-clave"><span class="header-section-number">2.2.2</span> Elementos Clave</h3>
+<p>Las series de tiempo poseen varios aspectos estructurales fundamentales:</p>
+<ol type="1">
+<li><p><strong>Orden Cronológico</strong>: Las observaciones están dispuestas secuencialmente en el tiempo, lo que permite analizar cómo evolucionan los fenómenos observados.</p></li>
+<li><p><strong>Frecuencia de Medición</strong>: Define la resolución temporal del análisis. Puede variar desde intervalos muy cortos (como milisegundos en transacciones bursátiles) hasta intervalos largos (como trimestres en reportes económicos).</p></li>
+<li><p><strong>Componentes Sistemáticos</strong>: Las series de tiempo suelen mostrar patrones recurrentes además de fluctuaciones aleatorias. Estos componentes incluyen:</p>
+<ul>
+<li><strong>Tendencia</strong>: Cambios a largo plazo, ya sea ascendentes o descendentes.</li>
+<li><strong>Estacionalidad</strong>: Fluctuaciones regulares en intervalos fijos, como los aumentos en ventas durante diciembre.</li>
+<li><strong>Ciclicidad</strong>: Oscilaciones de largo plazo no necesariamente periódicas, asociadas a factores económicos.</li>
+<li><strong>Ruido</strong>: Variabilidad no sistemática que no puede explicarse por los componentes anteriores.</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="componentes-fundamentales" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="componentes-fundamentales"><span class="header-section-number">2.3</span> Componentes fundamentales</h2>
+<p>La descomposición estructural permite analizar series de tiempo dinámicas. Los cuatro componentes esenciales son: tendencia, estacionalidad, ciclo e irregularidad.</p>
+<section id="tendencia" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="tendencia"><span class="header-section-number">2.3.1</span> Tendencia</h3>
+<p>Refleja un crecimiento o decrecimiento sostenido en el tiempo. Por ejemplo, el número de pasajeros aéreos muestra un incremento constante a lo largo de 12 años, con una pendiente del 12% anual, asociada al auge del turismo y los negocios internacionales tras la Segunda Guerra Mundial.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Tendencia (Ejemplo: Pasajeros aéreos)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"AirPassengers"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>trend_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">fecha =</span> <span class="fu">time</span>(AirPassengers) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>(),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pasajeros =</span> <span class="fu">as.numeric</span>(AirPassengers)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trend_data, <span class="fu">aes</span>(<span class="at">x =</span> fecha, <span class="at">y =</span> pasajeros)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#F48FB1"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"#CE93D8"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Tendencia: Pasajeros Aéreos Internacionales (1949-1960)"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Año"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Número de Pasajeros (miles)"</span>) <span class="sc">+</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-Series-de-Tiempo_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Esta gráfica representa el número de pasajeron mensual en vuelos internacionales (1949-1960). Se observa un crecimiento sostenido debido a la expansión de la aviaci;ón comercial.</p>
+</section>
+<section id="estacionalidad" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="estacionalidad"><span class="header-section-number">2.3.2</span> Estacionalidad</h3>
+<p>La <strong>estacionalidad</strong> se refiere a fluctuaciones periódicas y predecibles en los datos, que se repiten en intervalos regulares (diarios, mensuales, anuales). Surge de factores recurrentes como festividades, condiciones climáticas o ciclos comerciales.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Estacionalidad </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"AirPassengers"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df_air <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  año <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">time</span>(AirPassengers)),  <span class="co"># Extraer año</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">mes =</span> <span class="fu">cycle</span>(AirPassengers),        <span class="co"># Extraer mes (1-12)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pasajeros =</span> <span class="fu">as.numeric</span>(AirPassengers)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_air, <span class="fu">aes</span>(<span class="at">x =</span> año <span class="sc">+</span> (mes<span class="dv">-1</span>)<span class="sc">/</span><span class="dv">12</span>, <span class="at">y =</span> pasajeros)) <span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#F48FB1"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#CE93D8"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Estacionalidad en Pasajeros Aéreos"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Picos recurrentes en verano (meses 6-8) y diciembre"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Año"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Pasajeros (miles)"</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1949</span><span class="sc">:</span><span class="dv">1960</span>) <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-Series-de-Tiempo_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Podemos notar lo siguiente: 1. <strong>Picos Recurrentes</strong>:<br>
+- <strong>Verano (Junio-Agosto)</strong>:<br>
+Aumento del <strong>35-40%</strong> en pasajeros respecto al promedio anual, impulsado por vacaciones escolares y turismo estival.<br>
+- <strong>Diciembre</strong>:<br>
+Segundo pico del <strong>25-30%</strong> por viajes navideños y de fin de año.</p>
+<ol start="2" type="1">
+<li><strong>Valles Pronunciados</strong>:
+<ul>
+<li><strong>Enero-Febrero</strong>:<br>
+Caída del <strong>20-25%</strong> por reducción de viajes post-festivos y clima invernal en el hemisferio norte.</li>
+</ul></li>
+</ol>
+</section>
+<section id="ciclos" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="ciclos"><span class="header-section-number">2.3.3</span> Ciclos</h3>
+<p>Representan fluctuaciones prolongadas, pero no periódicas. Un ciclo económico puede durar entre 7 y 10 años, como la expansión entre 1991–2001 o la recesión de 2008. Sus picos y valles se asocian con innovaciones tecnológicas o crisis financieras, respectivamente.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Ciclo</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar datos y definir recesiones (fuente: NBER)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>recesiones <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inicio =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"1973-11-01"</span>, <span class="st">"1981-07-01"</span>, <span class="st">"1990-07-01"</span>, <span class="st">"2001-03-01"</span>, <span class="st">"2007-12-01"</span>)),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">fin =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"1975-03-01"</span>, <span class="st">"1982-11-01"</span>, <span class="st">"1991-03-01"</span>, <span class="st">"2001-11-01"</span>, <span class="st">"2009-06-01"</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico con ciclos económicos</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(economics) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> unemploy<span class="sc">/</span><span class="dv">1000</span>), <span class="at">color =</span> <span class="st">"#1f77b4"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> recesiones,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xmin =</span> inicio, <span class="at">xmax =</span> fin, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="cn">Inf</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#d62728"</span>, <span class="at">alpha =</span> <span class="fl">0.15</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Ciclos Económicos en el Desempleo de EE.UU."</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Áreas rojas: recesiones oficiales (NBER) | Datos: 1967-2015"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Año"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Desempleados (millones)"</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"10 years"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-Series-de-Tiempo_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se puede apreciar fluctiaciones no periodicas vinculadas a eventos macroeconomicos. Estas se deben a la crisis petrolera (1973-75), una politica de antiinflación (Volcker Schock, 1981-82) y a una crisis financiera (2007-09).</p>
+</section>
+<section id="irregularidad" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="irregularidad"><span class="header-section-number">2.3.4</span> Irregularidad</h3>
+<p>Incluye eventos impredecibles. Por ejemplo, un pico repentino en Q4/2023 por la aprobación de un ETF de Bitcoin, o una caída en Q1/2024 causada por un ciberataque. La desviación estándar del 45% refleja alta volatilidad.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Irregularidad (Ventas diarias)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_irregular <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">fecha =</span> <span class="fu">seq.Date</span>(<span class="fu">as.Date</span>(<span class="st">"2024-01-01"</span>), <span class="at">by =</span> <span class="st">"day"</span>, <span class="at">length.out =</span> <span class="dv">180</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ventas =</span> <span class="dv">500</span> <span class="sc">+</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">180</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>))  <span class="co"># Ruido acumulativo</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadir eventos atípicos</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>df_irregular<span class="sc">$</span>ventas[<span class="dv">50</span><span class="sc">:</span><span class="dv">55</span>] <span class="ot">&lt;-</span> df_irregular<span class="sc">$</span>ventas[<span class="dv">50</span><span class="sc">:</span><span class="dv">55</span>] <span class="sc">+</span> <span class="dv">80</span>   <span class="co"># Promoción flash</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>df_irregular<span class="sc">$</span>ventas[<span class="dv">120</span><span class="sc">:</span><span class="dv">125</span>] <span class="ot">&lt;-</span> df_irregular<span class="sc">$</span>ventas[<span class="dv">120</span><span class="sc">:</span><span class="dv">125</span>] <span class="sc">-</span> <span class="dv">60</span>  <span class="co"># Fallo logístico</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_irregular, <span class="fu">aes</span>(<span class="at">x =</span> fecha, <span class="at">y =</span> ventas)) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#9467bd"</span>, <span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> df_irregular[<span class="fu">c</span>(<span class="dv">50</span><span class="sc">:</span><span class="dv">55</span>, <span class="dv">120</span><span class="sc">:</span><span class="dv">125</span>), ], </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"#d62728"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Irregularidad en Ventas Diarias"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Puntos rojos: eventos atípicos no explicados por patrones estructurales"</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Fecha"</span>,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ventas (unidades)"</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"1 month"</span>, <span class="at">date_labels =</span> <span class="st">"%b"</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-Series-de-Tiempo_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aquí se notan fluctuaciones no sistemáticas que pueden ser causadas por eventos imprevistos, errores de medición o solo comportamientos aleatorios del mercado.</p>
+<hr>
+</section>
+</section>
+<section id="esperanza-de-una-serie-de-tiempo" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="esperanza-de-una-serie-de-tiempo"><span class="header-section-number">2.4</span> Esperanza de una serie de Tiempo</h2>
+<p>La esperanza <span class="math inline">\(E(Y_t)\)</span> de una serie <span class="math inline">\(\{Y_t\}\)</span> representa su valor promedio teórico en el tiempo <span class="math inline">\(t\)</span>. Este concepto central se estudia con el supuesto de que el error <span class="math inline">\(\varepsilon_t\sim N(0,\sigma^2)\)</span> es ruido blanco gaussiano.</p>
+<section id="casos-de-estudio" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="casos-de-estudio"><span class="header-section-number">2.4.1</span> Casos de Estudio</h3>
+<section id="media-constante-con-ruido-blanco" class="level4">
+<h4 class="anchored" data-anchor-id="media-constante-con-ruido-blanco">Media Constante con Ruido Blanco</h4>
+<p><strong>Modelo</strong>:<br>
+<span class="math display">\[
+Y_t = \mu + \varepsilon_t
+\]</span></p>
+<p><strong>Cálculo de la Esperanza</strong>:<br>
+<span class="math display">\[
+E(Y_t) = E(\mu + \varepsilon_t) = \mu + E(\varepsilon_t) = \mu + 0 = \mu
+\]</span></p>
+<p><strong>Interpretación</strong>:<br>
+- La serie fluctúa alrededor de una media constante <span class="math inline">\(\mu\)</span>.<br>
+- Ejemplo: Temperatura promedio mensual en una región estable.</p>
+</section>
+<section id="tendencia-lineal-con-ruido-blanco" class="level4">
+<h4 class="anchored" data-anchor-id="tendencia-lineal-con-ruido-blanco">Tendencia Lineal con Ruido Blanco</h4>
+<p><strong>Modelo</strong>:<br>
+<span class="math display">\[
+Y_t = \beta t + \varepsilon_t
+\]</span></p>
+<p><strong>Cálculo de la Esperanza</strong>:<br>
+<span class="math display">\[
+E(Y_t) = E(\beta t + \varepsilon_t) = \beta t + E(\varepsilon_t) = \beta t
+\]</span></p>
+<p><strong>Interpretación</strong>:<br>
+- La media de la serie crece/decrece linealmente con el tiempo.<br>
+- Ejemplo: Ventas anuales de un producto en expansión.</p>
+</section>
+</section>
+<section id="propiedades-clave" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="propiedades-clave"><span class="header-section-number">2.4.2</span> Propiedades Clave</h3>
+<ol type="1">
+<li><p><strong>Linealidad</strong>:<br>
+Si <span class="math inline">\(Y_t = a X_t + b\)</span>, entonces <span class="math inline">\(E(Y_t) = a E(X_t) + b\)</span>.</p></li>
+<li><p><strong>Independencia del Ruido</strong>:<br>
+<span class="math inline">\(E(\varepsilon_t) = 0\)</span> implica que el ruido no afecta la esperanza teórica.</p></li>
+<li><p><strong>Estacionariedad en Media</strong>:<br>
+Si <span class="math inline">\(E(Y_t) = \mu\)</span> (constante), la serie es estacionaria en media.</p></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="autocovarianza-de-una-serie-de-tiempo" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="autocovarianza-de-una-serie-de-tiempo"><span class="header-section-number">2.5</span> Autocovarianza de una serie de Tiempo</h2>
+<p>La <strong>autocovarianza</strong> mide la dependencia lineal entre dos observaciones de una serie temporal separadas por un retardo <span class="math inline">\(j\)</span>. Para una serie <span class="math inline">\(\{Y_t\}_{t=0}^\infty\)</span>, se define como:</p>
+<p><span class="math display">\[
+\gamma_j = \mathbb{E}\left[(Y_t - \mu_t)(Y_{t-j} - \mu_{t-j})\right]
+\]</span></p>
+<p>donde:<br>
+- <span class="math inline">\(\mu_t = \mathbb{E}(Y_t)\)</span>: Media de la serie en el tiempo <span class="math inline">\(t\)</span>.<br>
+- <span class="math inline">\(\mu_{t-j} = \mathbb{E}(Y_{t-j})\)</span>: Media en el tiempo <span class="math inline">\(t-j\)</span>.</p>
+<p>Para calcular <span class="math inline">\(\gamma_j\)</span>, se construye un vector <span class="math inline">\(x_t\)</span> con las <span class="math inline">\(j+1\)</span> observaciones más recientes:</p>
+<p><span class="math display">\[
+x_t =
+\begin{pmatrix}
+Y_t \\
+Y_{t-1} \\
+\vdots \\
+Y_{t-j}
+\end{pmatrix}
+\]</span></p>
+<p>La <strong>distribución conjunta</strong> de <span class="math inline">\((Y_t, Y_{t-1}, \ldots, Y_{t-j})\)</span> permite derivar las autocovarianzas.</p>
+<section id="interpretación" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="interpretación"><span class="header-section-number">2.5.1</span> Interpretación</h3>
+<ul>
+<li><strong>Autocovarianza de orden</strong> <span class="math inline">\(j\)</span> (<span class="math inline">\(\gamma_j\)</span>):
+<ul>
+<li>Mide cómo <span class="math inline">\(Y_t\)</span> covaría con su valor pasado <span class="math inline">\(Y_{t-j}\)</span>.<br>
+</li>
+<li>Si <span class="math inline">\(\gamma_j &gt; 0\)</span>: Valores altos/bajos de <span class="math inline">\(Y_t\)</span> tienden a asociarse con valores altos/bajos de <span class="math inline">\(Y_{t-j}\)</span>.<br>
+</li>
+<li>Si <span class="math inline">\(\gamma_j &lt; 0\)</span>: Valores altos de <span class="math inline">\(Y_t\)</span> se vinculan con valores bajos de <span class="math inline">\(Y_{t-j}\)</span>, y viceversa.</li>
+</ul></li>
+<li><strong>Autocovarianza de orden 0 (</strong><span class="math inline">\(\gamma_0\)</span>):<br>
+<span class="math display">\[
+\gamma_0 = \mathbb{E}\left[(Y_t - \mu_t)^2\right] = \text{Var}(Y_t)
+\]</span><br>
+Es la <strong>varianza</strong> de la serie, es decir, la dispersión de <span class="math inline">\(Y_t\)</span> alrededor de su media.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="autcorrelación-de-una-serie-de-tiempo" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="autcorrelación-de-una-serie-de-tiempo"><span class="header-section-number">2.6</span> Autcorrelación de una serie de Tiempo</h2>
+<section id="definición-del-coeficiente-de-autocorrelación" class="level3" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="definición-del-coeficiente-de-autocorrelación"><span class="header-section-number">2.6.1</span> Definición del Coeficiente de Autocorrelación</h3>
+<p>El coeficiente de autocorrelación de orden <span class="math inline">\(k\)</span> para una serie de tiempo <span class="math inline">\(\{Y_t\}_{t=0}^\infty\)</span> se define como:</p>
+<p><span class="math display">\[
+\rho_k = \frac{\mathbb{E}\left[(Y_t - \mu_t)(Y_{t+k} - \mu_t)\right]}{\sqrt{\mathbb{E}\left[(Y_t - \mu_t)^2\right]\mathbb{E}\left[(Y_{t+k} - \mu_t)^2\right]}} = \frac{\text{Cov}(Y_t, Y_{t+k})}{\text{Var}(Y_t)} = \frac{\gamma_k}{\gamma_0}
+\]</span></p>
+</section>
+<section id="función-de-autocorrelación-acf" class="level3" data-number="2.6.2">
+<h3 data-number="2.6.2" class="anchored" data-anchor-id="función-de-autocorrelación-acf"><span class="header-section-number">2.6.2</span> Función de Autocorrelación (ACF)</h3>
+<p>La <strong>función de autocorrelación (ACF)</strong> es la colección de valores <span class="math inline">\(\{\rho_k\}\)</span> para <span class="math inline">\(k = 0, 1, 2, \ldots\)</span>.</p>
+<p><strong>Propiedades clave</strong>:<br>
+1. <strong>Adimensional</strong>:<br>
+- <span class="math inline">\(\rho_k\)</span> no depende de la escala de medición de la serie.<br>
+- Valores en <span class="math inline">\([-1, 1]\)</span>.<br>
+2. <strong>Simetría</strong>:<br>
+- <span class="math inline">\(\rho_k = \rho_{-k}\)</span> (simétrica alrededor de <span class="math inline">\(k=0\)</span>).<br>
+3. <strong>Interpretación</strong>:<br>
+- <span class="math inline">\(\rho_k = 1\)</span>: Correlación perfecta positiva en retardo <span class="math inline">\(k\)</span>.<br>
+- <span class="math inline">\(\rho_k = -1\)</span>: Correlación perfecta negativa en retardo <span class="math inline">\(k\)</span>.</p>
+<section id="ejemplo-gráfico-de-la-acf" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-gráfico-de-la-acf">Ejemplo Gráfico de la ACF</h4>
+<hr>
+</section>
+</section>
+<section id="cálculo-de-la-acf-muestral" class="level3" data-number="2.6.3">
+<h3 data-number="2.6.3" class="anchored" data-anchor-id="cálculo-de-la-acf-muestral"><span class="header-section-number">2.6.3</span> Cálculo de la ACF Muestral</h3>
+<p>Para una serie de <span class="math inline">\(T\)</span> observaciones, la ACF muestral se estima como:<br>
+<span class="math display">\[
+\hat{\rho}_k = \frac{\sum_{t=1}^{T-k} (Y_t - \overline{Y})(Y_{t+k} - \overline{Y})}{\sum_{t=1}^T (Y_t - \overline{Y})^2}, \quad k = 0, 1, \ldots, K
+\]</span><br>
+donde <span class="math inline">\(\overline{Y}\)</span> es la media muestral y <span class="math inline">\(K \approx T/4\)</span> (regla práctica).</p>
+<p><strong>Nota</strong>: La ACF es una herramienta fundamental en el análisis de series de tiempo, utilizada en modelos como ARIMA y para diagnósticos de estacionariedad.</p>
+<hr>
+</section>
+</section>
+<section id="autocovarianza-y-autocorrelación-muestral" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="autocovarianza-y-autocorrelación-muestral"><span class="header-section-number">2.7</span> Autocovarianza y Autocorrelación Muestral</h2>
+<p>En el análisis de series de tiempo, la estimación de la autocovarianza y autocorrelación muestral es esencial para identificar patrones de dependencia temporal en conjuntos de datos finitos. Para una serie de tiempo <span class="math inline">\(Y_1, Y_2, \ldots, Y_T\)</span>, estas funciones se calculan de la siguiente manera:</p>
+<section id="estimación-de-la-autocovarianza" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="estimación-de-la-autocovarianza"><span class="header-section-number">2.7.1</span> Estimación de la Autocovarianza</h3>
+<p>La autocovarianza muestral de orden <span class="math inline">\(k\)</span>, denotada como <span class="math inline">\(c_k\)</span>, se define mediante:<br>
+<span class="math display">\[
+c_k = \frac{1}{T} \sum_{t=1}^{T-k} (Y_t - \bar{Y})(Y_{t+k} - \bar{Y}),
+\]</span><br>
+donde <span class="math inline">\(\bar{Y}\)</span> es la media muestral de la serie. Este estimador utiliza un divisor <span class="math inline">\(T\)</span> (en lugar de <span class="math inline">\(T - k\)</span>) para garantizar que la matriz de autocovarianza sea definida positiva, aunque introduce un ligero sesgo en muestras pequeñas. La simetría de la función (<span class="math inline">\(c_k = c_{-k}\)</span>) facilita su interpretación en aplicaciones prácticas.</p>
+</section>
+<section id="función-de-autocorrelación-muestral-acf" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="función-de-autocorrelación-muestral-acf"><span class="header-section-number">2.7.2</span> Función de Autocorrelación Muestral (ACF)</h3>
+<p>La autocorrelación muestral estandariza la autocovarianza para obtener valores adimensionales entre <span class="math inline">\(-1\)</span> y <span class="math inline">\(1\)</span>:<br>
+<span class="math display">\[
+r_k = \frac{c_k}{c_0}, \quad \text{con } c_0 = \frac{1}{T} \sum_{t=1}^T (Y_t - \bar{Y})^2.
+\]</span><br>
+Aquí, <span class="math inline">\(c_0\)</span> corresponde a la varianza muestral. Un valor de <span class="math inline">\(r_k\)</span> cercano a <span class="math inline">\(1\)</span> indica una correlación positiva fuerte en el retardo <span class="math inline">\(k\)</span>, mientras que <span class="math inline">\(r_k \approx -1\)</span> sugiere una correlación negativa. Valores próximos a <span class="math inline">\(0\)</span> implican independencia lineal.</p>
+</section>
+<section id="consideraciones-para-una-estimación-confiable" class="level3" data-number="2.7.3">
+<h3 data-number="2.7.3" class="anchored" data-anchor-id="consideraciones-para-una-estimación-confiable"><span class="header-section-number">2.7.3</span> Consideraciones para una Estimación Confiable</h3>
+<p>Para minimizar errores en la estimación, se recomienda un tamaño muestral mínimo de <span class="math inline">\(T \geq 50\)</span>. Esto reduce la varianza de los estimadores, particularmente en retardos altos. Además, el retardo máximo <span class="math inline">\(K\)</span> suele fijarse como <span class="math inline">\(K \approx T/4\)</span>, equilibrando la captura de patrones relevantes y la evitación de ruido. Por ejemplo, en una serie con <span class="math inline">\(T = 100\)</span>, se calcularían autocorrelaciones hasta <span class="math inline">\(K = 25\)</span>.</p>
+</section>
+<section id="aplicaciones-en-el-análisis" class="level3" data-number="2.7.4">
+<h3 data-number="2.7.4" class="anchored" data-anchor-id="aplicaciones-en-el-análisis"><span class="header-section-number">2.7.4</span> Aplicaciones en el Análisis</h3>
+<p>La ACF muestral es fundamental para identificar componentes como estacionalidad (picos en retardos específicos, como <span class="math inline">\(k = 12\)</span> en datos mensuales) o ruido blanco (valores dentro de intervalos de confianza). En modelos ARIMA, los residuos deben exhibir una ACF compatible con ruido blanco para validar su adecuación.</p>
+<p>Esta sección subraya la importancia de estas herramientas en la modelización de series temporales, proporcionando una base para técnicas avanzadas como la descomposición estacional y la predicción.</p>
+<hr>
+</section>
+</section>
+<section id="autocorrelación-parcial-de-una-serie-de-tiempo" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="autocorrelación-parcial-de-una-serie-de-tiempo"><span class="header-section-number">2.8</span> Autocorrelación Parcial de una Serie de Tiempo</h2>
+<p>La <strong>autocorrelación parcial</strong> (PACF, por sus siglas en inglés) es una medida que cuantifica la correlación entre dos observaciones de una serie temporal, <span class="math inline">\(Y_t\)</span> y <span class="math inline">\(Y_{t-k}\)</span>, después de eliminar el efecto lineal de las observaciones intermedias <span class="math inline">\(Y_{t-1}, Y_{t-2}, \ldots, Y_{t-k+1}\)</span>. Este concepto se basa en el principio de correlación parcial entre variables aleatorias, ajustando por factores de confusión.</p>
+<section id="fundamentos-teóricos" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="fundamentos-teóricos"><span class="header-section-number">2.8.1</span> Fundamentos Teóricos</h3>
+<p>Sean <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, y <span class="math inline">\(Z\)</span> variables aleatorias. La correlación parcial entre <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, ajustando por <span class="math inline">\(Z\)</span>, se obtiene mediante los siguientes pasos:<br>
+1. <strong>Regresión lineal</strong> de <span class="math inline">\(X\)</span> sobre <span class="math inline">\(Z\)</span>:<br>
+<span class="math display">\[
+   \hat{X} = a_1 + b_1 Z, \quad b_1 = \frac{\text{Cov}(Z, X)}{\text{Var}(Z)}.
+   \]</span><br>
+2. <strong>Regresión lineal</strong> de <span class="math inline">\(Y\)</span> sobre <span class="math inline">\(Z\)</span>:<br>
+<span class="math display">\[
+   \hat{Y} = a_2 + b_2 Z, \quad b_2 = \frac{\text{Cov}(Z, Y)}{\text{Var}(Z)}.
+   \]</span><br>
+3. <strong>Residuos</strong>:<br>
+<span class="math display">\[
+   X^* = X - \hat{X}, \quad Y^* = Y - \hat{Y}.
+   \]</span><br>
+La correlación parcial entre <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> (ajustando por <span class="math inline">\(Z\)</span>) es la correlación entre los residuos <span class="math inline">\(X^*\)</span> y <span class="math inline">\(Y^*\)</span>.</p>
+</section>
+<section id="aplicación-a-series-de-tiempo" class="level3" data-number="2.8.2">
+<h3 data-number="2.8.2" class="anchored" data-anchor-id="aplicación-a-series-de-tiempo"><span class="header-section-number">2.8.2</span> Aplicación a Series de Tiempo</h3>
+<p>Para una serie temporal <span class="math inline">\(\{Y_t\}\)</span>, la autocorrelación parcial en el retardo <span class="math inline">\(k\)</span> se define como la correlación entre <span class="math inline">\(Y_t\)</span> y <span class="math inline">\(Y_{t-k}\)</span>, tras eliminar la influencia de <span class="math inline">\(Y_{t-1}, Y_{t-2}, \ldots, Y_{t-k+1}\)</span>. Matemáticamente:<br>
+<span class="math display">\[
+\text{PACF}(k) = \text{Corr}(Y_t^*,\, Y_{t-k}^*),
+\]</span><br>
+donde <span class="math inline">\(Y_t^*\)</span> y <span class="math inline">\(Y_{t-k}^*\)</span> son los residuos de regresiones lineales que ajustan por los rezagos intermedios.</p>
+<section id="interpretación-1" class="level4">
+<h4 class="anchored" data-anchor-id="interpretación-1">Interpretación</h4>
+<ul>
+<li><span class="math inline">\(\text{PACF}(k) \neq 0\)</span>: Indica una dependencia directa entre <span class="math inline">\(Y_t\)</span> y <span class="math inline">\(Y_{t-k}\)</span> no mediada por rezagos anteriores.<br>
+</li>
+<li><span class="math inline">\(\text{PACF}(k) \approx 0\)</span>: Sugiere que la correlación en el retardo <span class="math inline">\(k\)</span> se explica completamente por los rezagos intermedios.</li>
+</ul>
+</section>
+</section>
+<section id="relevancia-en-modelado" class="level3" data-number="2.8.3">
+<h3 data-number="2.8.3" class="anchored" data-anchor-id="relevancia-en-modelado"><span class="header-section-number">2.8.3</span> Relevancia en Modelado</h3>
+<p>La PACF es crítica en modelos autorregresivos (AR). Por ejemplo, en un proceso AR(p):<br>
+- La PACF tiene cortes abruptos en el retardo <span class="math inline">\(p\)</span>.<br>
+- Los valores significativos en <span class="math inline">\(\text{PACF}(k)\)</span> para <span class="math inline">\(k \leq p\)</span> ayudan a determinar el orden del modelo.</p>
+<hr>
+</section>
+</section>
+<section id="definición-formal-de-la-autocorrelación-parcial-y-ecuaciones-de-yule-walker" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="definición-formal-de-la-autocorrelación-parcial-y-ecuaciones-de-yule-walker"><span class="header-section-number">2.9</span> Definición Formal de la Autocorrelación Parcial y Ecuaciones de Yule-Walker</h2>
+<section id="ecuaciones-de-yule-walker-para-procesos-ar" class="level3" data-number="2.9.1">
+<h3 data-number="2.9.1" class="anchored" data-anchor-id="ecuaciones-de-yule-walker-para-procesos-ar"><span class="header-section-number">2.9.1</span> Ecuaciones de Yule-Walker para Procesos AR</h3>
+<p>Para un modelo de serie de tiempo estacionaria <span class="math inline">\(\{Y_i\}_{i \geq 0}\)</span>, las <strong>ecuaciones de Yule-Walker</strong> relacionan los coeficientes autorregresivos (<span class="math inline">\(\phi_{ik}\)</span>) con la función de autocorrelación (<span class="math inline">\(\rho(j)\)</span>). Para un orden fijo <span class="math inline">\(k\)</span>, estas ecuaciones se expresan como:</p>
+<p><span class="math display">\[
+\rho(j) = \sum_{i=1}^k \phi_{ik} \rho(j-i), \quad j = 1, 2, \ldots, k,
+\]</span></p>
+<p>que, expandidas, toman la forma:<br>
+<span class="math display">\[
+\begin{aligned}
+\rho(1) &amp;= \phi_{1k} + \phi_{2k}\rho(1) + \cdots + \phi_{kk}\rho(k-1), \\
+\rho(2) &amp;= \phi_{1k}\rho(1) + \phi_{2k} + \cdots + \phi_{kk}\rho(k-2), \\
+&amp;\;\;\vdots \\
+\rho(k) &amp;= \phi_{1k}\rho(k-1) + \phi_{2k}\rho(k-2) + \cdots + \phi_{kk}.
+\end{aligned}
+\]</span></p>
+</section>
+<section id="notación-matricial" class="level3" data-number="2.9.2">
+<h3 data-number="2.9.2" class="anchored" data-anchor-id="notación-matricial"><span class="header-section-number">2.9.2</span> Notación Matricial</h3>
+<p>El sistema de ecuaciones se representa matricialmente como:<br>
+<span class="math display">\[
+\begin{pmatrix}
+1 &amp; \rho(1) &amp; \rho(2) &amp; \cdots &amp; \rho(k-1) \\
+\rho(1) &amp; 1 &amp; \rho(1) &amp; \cdots &amp; \rho(k-2) \\
+\rho(2) &amp; \rho(1) &amp; 1 &amp; \cdots &amp; \rho(k-3) \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\rho(k-1) &amp; \rho(k-2) &amp; \rho(k-3) &amp; \cdots &amp; 1
+\end{pmatrix}
+\begin{pmatrix}
+\phi_{1k} \\
+\phi_{2k} \\
+\phi_{3k} \\
+\vdots \\
+\phi_{kk}
+\end{pmatrix}
+=
+\begin{pmatrix}
+\rho(1) \\
+\rho(2) \\
+\rho(3) \\
+\vdots \\
+\rho(k)
+\end{pmatrix},
+\]</span><br>
+o, en forma compacta:<br>
+<span class="math display">\[
+P_k \phi_k = \rho_k,
+\]</span><br>
+donde <span class="math inline">\(P_k\)</span> es la matriz de autocorrelaciones y <span class="math inline">\(\rho_k\)</span> es el vector de autocorrelaciones hasta el retardo <span class="math inline">\(k\)</span>.</p>
+<hr>
+</section>
+<section id="solución-y-autocorrelación-parcial" class="level3" data-number="2.9.3">
+<h3 data-number="2.9.3" class="anchored" data-anchor-id="solución-y-autocorrelación-parcial"><span class="header-section-number">2.9.3</span> Solución y Autocorrelación Parcial</h3>
+<p>Los coeficientes <span class="math inline">\(\phi_k\)</span> se obtienen invirtiendo la matriz <span class="math inline">\(P_k\)</span>:<br>
+<span class="math display">\[
+\phi_k = P_k^{-1} \rho_k.
+\]</span><br>
+El <strong>último coeficiente</strong> del vector <span class="math inline">\(\phi_k\)</span>, denotado <span class="math inline">\(\phi_{kk}\)</span>, corresponde a la <strong>autocorrelación parcial en el retardo</strong> <span class="math inline">\(k\)</span>.</p>
+<section id="interpretación-de-phi_kk" class="level4">
+<h4 class="anchored" data-anchor-id="interpretación-de-phi_kk">Interpretación de <span class="math inline">\(\phi_{kk}\)</span></h4>
+<ul>
+<li><span class="math inline">\(\phi_{kk} \neq 0\)</span>: Indica una dependencia directa entre <span class="math inline">\(Y_t\)</span> y <span class="math inline">\(Y_{t-k}\)</span> no explicada por los rezagos intermedios.<br>
+</li>
+<li><span class="math inline">\(\phi_{kk} \approx 0\)</span>: La correlación en el retardo <span class="math inline">\(k\)</span> se debe completamente a los rezagos anteriores.</li>
+</ul>
+</section>
+</section>
+<section id="ejemplo-proceso-ar2" class="level3" data-number="2.9.4">
+<h3 data-number="2.9.4" class="anchored" data-anchor-id="ejemplo-proceso-ar2"><span class="header-section-number">2.9.4</span> Ejemplo: Proceso AR(2)</h3>
+<p>Para un modelo AR(2) (<span class="math inline">\(k=2\)</span>):<br>
+<span class="math display">\[
+\phi_{22} = \frac{\rho(2) - \rho(1)^2}{1 - \rho(1)^2}.
+\]</span><br>
+Este valor representa la autocorrelación parcial en el retardo 2, crucial para identificar el orden del modelo.</p>
+</section>
+<section id="aplicación-en-identificación-de-modelos" class="level3" data-number="2.9.5">
+<h3 data-number="2.9.5" class="anchored" data-anchor-id="aplicación-en-identificación-de-modelos"><span class="header-section-number">2.9.5</span> Aplicación en Identificación de Modelos</h3>
+<ul>
+<li><strong>Corte en la PACF</strong>: En procesos AR(p), la PACF tiene valores significativos hasta el retardo <span class="math inline">\(p\)</span> y luego cae abruptamente.<br>
+</li>
+</ul>
+<p>Esta metodología es fundamental para seleccionar órdenes en modelos autorregresivos y validar supuestos de estacionariedad.</p>
+<hr>
+</section>
+</section>
+<section id="estacionariedad-en-series-de-tiempo" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="estacionariedad-en-series-de-tiempo"><span class="header-section-number">2.10</span> Estacionariedad en Series de Tiempo</h2>
+<p>Un proceso <span class="math inline">\(\{Y_t\}\)</span> se define como <strong>estacionario en covarianza</strong> (o débilmente estacionario) cuando satisface dos condiciones fundamentales:</p>
+<section id="condiciones-para-la-estacionariedad-débil" class="level3" data-number="2.10.1">
+<h3 data-number="2.10.1" class="anchored" data-anchor-id="condiciones-para-la-estacionariedad-débil"><span class="header-section-number">2.10.1</span> Condiciones para la estacionariedad débil</h3>
+<p><strong>1. Media constante</strong><br>
+La esperanza matemática de <span class="math inline">\(Y_t\)</span> permanece invariante en el tiempo:<br>
+<span class="math display">\[
+\mathbb{E}(Y_t) = \mu \quad \text{para todo } t.
+\]</span><br>
+Por ejemplo, en una serie de ventas mensuales estacionaria, no existirían tendencias ascendentes o descendentes a largo plazo, manteniendo un promedio estable.</p>
+<p><strong>2. Autocovarianzas dependientes del lag</strong><br>
+La covarianza entre <span class="math inline">\(Y_t\)</span> y <span class="math inline">\(Y_{t-j}\)</span> solo depende del desplazamiento temporal <span class="math inline">\(j\)</span>, no del instante <span class="math inline">\(t\)</span>:<br>
+<span class="math display">\[
+\mathbb{E}[(Y_t - \mu)(Y_{t-j} - \mu)] = \gamma_j \quad \text{para todo } t \text{ y cualquier } j.
+\]</span><br>
+Esto implica que la relación entre observaciones separadas por <span class="math inline">\(j\)</span> periodos es constante. Por ejemplo, la correlación entre las ventas de enero y febrero sería idéntica a la de febrero y marzo si <span class="math inline">\(j=1\)</span>.</p>
+</section>
+<section id="prueba-de-dickey-fuller-validando-la-estacionariedad" class="level3" data-number="2.10.2">
+<h3 data-number="2.10.2" class="anchored" data-anchor-id="prueba-de-dickey-fuller-validando-la-estacionariedad"><span class="header-section-number">2.10.2</span> Prueba de Dickey-Fuller: Validando la estacionariedad</h3>
+<p>Esta prueba estadística detecta la presencia de una <strong>raíz unitaria</strong>, señal de no estacionariedad. Su interpretación es clave:<br>
+- Si el estadístico de prueba es menor que los valores críticos (1%, 5%, 10%), se rechaza la hipótesis nula de raíz unitaria.<br>
+- Esto confirma que la serie es estacionaria, permitiendo modelarla con técnicas como ARMA o ARIMA.</p>
+</section>
+<section id="técnicas-para-lograr-estacionariedad" class="level3" data-number="2.10.3">
+<h3 data-number="2.10.3" class="anchored" data-anchor-id="técnicas-para-lograr-estacionariedad"><span class="header-section-number">2.10.3</span> Técnicas para lograr estacionariedad</h3>
+<p><strong>Diferenciación</strong><br>
+Transformar la serie calculando la diferencia entre observaciones consecutivas:<br>
+<span class="math display">\[
+\Delta Y_t = Y_t - Y_{t-1}.
+\]</span><br>
+Esto elimina tendencias deterministas y reduce la dependencia temporal.</p>
+<p><strong>Transformaciones no lineales</strong><br>
+- Aplicar logaritmos: <span class="math inline">\(\log(Y_t)\)</span> para estabilizar varianzas.<br>
+- Diferenciación estacional: <span class="math inline">\(\Delta_{12} Y_t = Y_t - Y_{t-12}\)</span> en datos mensuales con patrones anuales.</p>
+</section>
+<section id="estacionariedad-débil-vs.-estricta" class="level3" data-number="2.10.4">
+<h3 data-number="2.10.4" class="anchored" data-anchor-id="estacionariedad-débil-vs.-estricta"><span class="header-section-number">2.10.4</span> Estacionariedad débil vs.&nbsp;estricta</h3>
+<p><strong>Estacionariedad débil</strong><br>
+Requiere media constante y autocovarianzas que dependen solo del lag <span class="math inline">\(j\)</span>. Es la base de modelos como ARMA, al ser menos restrictiva y más aplicable en la práctica.</p>
+<p><strong>Estacionariedad estricta</strong><br>
+Exige que todas las distribuciones conjuntas (no solo media y covarianza) sean invariantes en el tiempo. Es teóricamente robusta pero raramente verificable en datos reales.</p>
+<hr>
+</section>
+</section>
+<section id="ejemplos-ilustrativos-de-estacionariedad-en-series-de-tiempo" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="ejemplos-ilustrativos-de-estacionariedad-en-series-de-tiempo"><span class="header-section-number">2.11</span> Ejemplos ilustrativos de estacionariedad en series de tiempo</h2>
+<section id="caso-estacionario" class="level3" data-number="2.11.1">
+<h3 data-number="2.11.1" class="anchored" data-anchor-id="caso-estacionario"><span class="header-section-number">2.11.1</span> Caso estacionario</h3>
+<p><strong>Modelo</strong>:<br>
+<span class="math display">\[
+Y_t = \mu + \varepsilon_t, \quad \varepsilon_t \sim N(0, \sigma^2)
+\]</span></p>
+<p><strong>Propiedades</strong>:<br>
+1. <strong>Media constante</strong>:<br>
+<span class="math display">\[
+   \mathbb{E}(Y_t) = \mu \quad \text{para todo } t.
+   \]</span><br>
+La ausencia de términos dependientes de <span class="math inline">\(t\)</span> garantiza que la media no varíe con el tiempo.</p>
+<ol start="2" type="1">
+<li><strong>Autocovarianzas</strong>:<br>
+<span class="math display">\[
+\gamma_j = \mathbb{E}[(Y_t - \mu)(Y_{t-j} - \mu)] =
+\begin{cases}
+\sigma^2 &amp; \text{si } j = 0 \\
+0 &amp; \text{si } j \neq 0
+\end{cases}.
+\]</span><br>
+Las autocovarianzas solo dependen del lag <span class="math inline">\(j\)</span>, no de <span class="math inline">\(t\)</span>.</li>
+</ol>
+</section>
+<section id="caso-no-estacionario" class="level3" data-number="2.11.2">
+<h3 data-number="2.11.2" class="anchored" data-anchor-id="caso-no-estacionario"><span class="header-section-number">2.11.2</span> Caso no estacionario</h3>
+<p><strong>Modelo</strong>:<br>
+<span class="math display">\[
+Y_t = \beta t + \varepsilon_t, \quad \varepsilon_t \sim N(0, \sigma^2)
+\]</span></p>
+<p><strong>Propiedades</strong>:<br>
+1. <strong>Media variable</strong>:<br>
+<span class="math display">\[
+   \mathbb{E}(Y_t) = \beta t.
+   \]</span><br>
+La presencia del término <span class="math inline">\(\beta t\)</span> introduce una tendencia lineal, haciendo que la media crezca con <span class="math inline">\(t\)</span>.</p>
+<ol start="2" type="1">
+<li><strong>Autocovarianzas</strong>:<br>
+Aunque las autocovarianzas para <span class="math inline">\(j \neq 0\)</span> son cero (como en el caso estacionario), la dependencia temporal de la media viola la condición de estacionariedad.</li>
+</ol>
+</section>
+<section id="comparación-clave" class="level3" data-number="2.11.3">
+<h3 data-number="2.11.3" class="anchored" data-anchor-id="comparación-clave"><span class="header-section-number">2.11.3</span> Comparación clave</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Característica</strong></th>
+<th>Caso estacionario</th>
+<th>Caso no estacionario</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Media</strong></td>
+<td>Constante (<span class="math inline">\(\mu\)</span>)</td>
+<td>Depende de <span class="math inline">\(t\)</span> (<span class="math inline">\(\beta t\)</span>)</td>
+</tr>
+<tr class="even">
+<td><strong>Autocovarianzas</strong></td>
+<td>Dependen solo de <span class="math inline">\(j\)</span></td>
+<td>Dependen de <span class="math inline">\(j\)</span>, pero media variable</td>
+</tr>
+<tr class="odd">
+<td><strong>Tendencia</strong></td>
+<td>Ausente</td>
+<td>Lineal (<span class="math inline">\(\beta t\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Importancia práctica</strong>:<br>
+- Los modelos como ARMA requieren estacionariedad. Si una serie tiene tendencia (como el segundo caso), se debe aplicar diferenciación:<br>
+<span class="math display">\[
+  \Delta Y_t = Y_t - Y_{t-1} \quad \text{(elimina tendencias deterministas)}.
+  \]</span><br>
+- La prueba de Dickey-Fuller ayuda a detectar no estacionariedad causada por raíces unitarias o tendencias.</p>
+<hr>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-abraham83" class="csl-entry" role="listitem">
+Abraham, Bovas, y Johannes Ledolter. 1983. <em>Statistical Methods for Forecasting</em>. 1.ª ed. New Jersey: Wiley.
+</div>
+<div id="ref-cowper09" class="csl-entry" role="listitem">
+Cowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. <em>Introductory Time Series with R</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.
+</div>
+<div id="ref-enders15" class="csl-entry" role="listitem">
+Enders, Walter. 2015. <em>Applied Econometric Time Series</em>. 1.ª ed. New York: Wiley.
+</div>
+<div id="ref-hamilton15" class="csl-entry" role="listitem">
+Hamilton, J. D. 2020. <em>Times series Analysis</em>. 1.ª ed. Wiley.
+</div>
+<div id="ref-montgomery08" class="csl-entry" role="listitem">
+Montgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. <em>Introduction to Time Series Analysis and Forecasting</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Caps/01-Introduccion.html" class="pagination-link" aria-label="Introducción">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Caps/03-Modelos lineales para series de tiempo estacionarias.html" class="pagination-link" aria-label="Modelos lineales para series de tiempo estacionarias">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelos lineales para series de tiempo estacionarias</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

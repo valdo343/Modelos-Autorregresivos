@@ -29,8 +29,6 @@ Aquí $\mu$ es la media constante del proceso. - $\epsilon_t, \epsilon_{t-1}, \l
     Después de $q$ periodos, el impacto del ruido se anula por completo. Esto contrasta con modelos autorregresivos (AR), donde los efectos pueden persistir indefinidamente.\
     *Ejemplo*: En un MA(3), el error $\epsilon_{t-3}$ no influye en $Y_t$, ya que su efecto termina en $t = 3$.
 
-#### Ejemplo Inventario
-
 ### Modelización con MA(2)
 
 **Ecuación del modelo**:\
@@ -43,29 +41,6 @@ $$
 - $\mu$: Demanda base constante (sin ofertas).\
 - $\epsilon_t$: Shock por oferta especial en el día $t$ (ruido blanco $\sim N(0, \sigma^2)$).\
 - $\theta_1, \theta_2$: Coeficientes que miden el impacto residual de la oferta en los días posteriores.
-
-#### Ejemplo
-
-### ¿Por qué MA(2) y no MA(3)?
-
-#### Ejemplo de proceso MA(1): Contaminación de un río
-
-**Ecuación del modelo**:\
-$$
-Y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1}
-$$
-
-**Interpretación**:\
-- $Y_t$: Concentración del contaminante en el día $t$.\
-- $\mu$: Nivel base de concentración (sin derrames).\
-- $\epsilon_t$: Shock por derrame en el día $t$ (ruido blanco $\sim N(0, \sigma^2)$).\
-- $\theta_1$: Coeficiente que cuantifica el impacto residual del derrame del día anterior.
-
-#### Ejemplo
-
-### ¿Por qué MA(1) y no MA(2)?
-
-### Ventajas del modelo MA(1)
 
 ------------------------------------------------------------------------
 
@@ -145,8 +120,6 @@ Para $j > q$, la autocorrelación es cero:\
 $$
 \rho_j = 0 \quad \text{si } j > q.
 $$
-
-**Ejemplo ilustrativo**
 
 ### Casos particulares
 
@@ -287,8 +260,6 @@ $$
     $$\
     Esta condición asegura que la varianza del proceso sea finita, evitando que las contribuciones acumuladas de los errores pasados divergían.
 
-#### Ejemplo
-
 ------------------------------------------------------------------------
 
 ## Características de los procesos MA(infty)
@@ -318,8 +289,6 @@ $$
 $$
 
 Esta condición asegura que los efectos de los shocks pasados no se acumulen indefinidamente, evitando que la varianza diverja.
-
-**Ejemplo ilustrativo**
 
 ------------------------------------------------------------------------
 
@@ -409,8 +378,6 @@ $$
 $$\
 - **ACF (Función de Autocorrelación)**: Decae lentamente, mostrando dependencias persistentes.\
 - **PACF (Función de Autocorrelación Parcial)**: Tiene un pico significativo en $k=1$ y es cero para $k > 1$.
-
-#### Ejemplo
 
 ### Representación MA(∞) bajo estacionariedad
 
@@ -958,7 +925,5 @@ donde:\
 El proceso de modelado implica tres etapas principales: diferenciar la serie $d$ veces para lograr estacionariedad, identificar los órdenes $p$ y $q$ para el modelo ARMA aplicado a la serie diferenciada, y finalmente estimar y validar los parámetros del modelo.
 
 Este enfoque integra la capacidad de los modelos ARMA para capturar dependencias en series estacionarias, combinándola con la diferenciación para manejar no estacionariedades en los datos originales.
-
-### ...
 
 ------------------------------------------------------------------------

@@ -3,8 +3,11 @@ project:
 
 book:
   title: "Modelos Autoregresivos"
-  author: "Ale, Oswaldo, Edruan"
-  date: "2025-05-20"
+  author: 
+    - Alejandra Borrego
+    - Oswaldo Bueno
+    - Edruan Ramírez
+  date: "2025-05-22"
   chapters:
     - index.qmd
     - Caps/01-Introduccion.qmd

@@ -3,7 +3,7 @@
     "path": "~/CIMAT/Clases/Semestre 2/Modelos Estadísticos I/Edruan/RegresionNoLineal/ModelosAutoregresivos/Caps/01-Introduccion.qmd",
     "project_path": "Caps/01-Introduccion.qmd",
     "type": "quarto_markdown",
-    "hash": "0",
+    "hash": "671148666",
     "contents": "",
     "dirty": false,
     "created": 1747858656684.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "0,0",
-        "scrollLine": "0"
+        "cursorPosition": "44,4",
+        "scrollLine": "32"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747956119,
+    "lastKnownWriteTime": 1747976522,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747956119979,
+    "last_content_update": 1747976522327,
     "read_only": false,
     "read_only_alternatives": []
 }
