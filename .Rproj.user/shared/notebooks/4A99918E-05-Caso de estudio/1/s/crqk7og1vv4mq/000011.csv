@@ -1,0 +1,21 @@
+"0","#points(az, pch = 16, col = ""#CE93D8"") # Graficamos los datos con circulos"
+"0",""
+"0","adf.test(az) # Prueba de Dickey-Fuller para estacionariedad."
+"1","
+	Augmented Dickey-Fuller Test
+
+data:  az
+Dickey-Fuller = -2.2567, Lag order = 6, p-value = 0.4681
+alternative hypothesis: stationary
+
+"
+"0","########## Revisamos la primer diferencia"
+"0",""
+"0","az_diff = ts(diff(az))"
+"0",""
+"0","# Gráfica de la serie de tiempo"
+"0","plot(az_diff, main = ""Primera diferencia"","
+"0","     xlab = ""Diferencia"", ylab = ""Toneladas"","
+"0","     col = ""#F4B4C9"", lwd = 2) "
+"2","Error en gzfile(file, ""wb""): no se puede abrir la conexión
+"

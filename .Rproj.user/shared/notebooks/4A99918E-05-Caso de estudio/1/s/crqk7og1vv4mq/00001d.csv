@@ -1,0 +1,16 @@
+"0",""
+"0","# Prueba de Ljung-Box para analizar la autocorrelación de los residuales"
+"0","#Box.test(residuales, lag = 40, type = ""Ljung-Box"")"
+"0",""
+"0",""
+"0","ad.test(residuales) # Prueba de normalidad para los residuales"
+"1","
+	Anderson-Darling normality test
+
+data:  residuales
+A = 0.99606, p-value = 0.01236
+
+"
+"0","qqnorm(residuales)"
+"2","Error en gzfile(file, ""wb""): no se puede abrir la conexión
+"

@@ -1,0 +1,6 @@
+"0","# Gráfica de la serie de tiempo"
+"0","plot(az, main = ""Minería mensual de azufre en Guanajuato"","
+"0","     xlab = ""Mes"", ylab = ""Toneladas"","
+"0","     col = ""#F4B4C9"", lwd = 2) "
+"2","Error en gzfile(file, ""wb""): no se puede abrir la conexión
+"

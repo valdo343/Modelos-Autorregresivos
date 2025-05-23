@@ -1,0 +1,8 @@
+"0","#| include: false"
+"0","# Instalar paquetes si es necesario"
+"0","# install.packages(c(""ggplot2"", ""forecast"", ""lubridate""))"
+"0",""
+"0","library(ggplot2)"
+"0","library(forecast)"
+"0","library(lubridate)"
+"0",""

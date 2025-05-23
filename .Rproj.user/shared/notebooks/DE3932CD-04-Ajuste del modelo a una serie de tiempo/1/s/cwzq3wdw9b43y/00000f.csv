@@ -1,0 +1,155 @@
+"0","#| echo: true"
+"0","#| message: false"
+"0","#| warning: false"
+"0","#| paged-print: false"
+"0","                              ### VENTAS DE FARMACEÚTICOS ###"
+"0",""
+"0","### Librerías necesarias "
+"0","library(nortest) # Anderson-Darling"
+"0","library(forecast) # Librería necesaria para la función Arima"
+"0","library(tseries) # Prueba Dickey-Fuller para estacionariedad"
+"0",""
+"0","ventas = c("
+"0","  10618.1, 10537.9, 10209.3, 10553.0,  9934.9, 10534.5, 10196.5, 10511.8, 10089.6, 10371.2,"
+"0","  10239.4, 10472.4, 10827.2, 10640.8, 10517.8, 10154.2,  9969.2, 10260.4, 10737.0, 10430.0,"
+"0","  10689.0, 10430.4, 10002.4, 10135.7, 10096.2, 10288.7, 10289.1, 10589.9, 10551.9, 10208.3,"
+"0","  10334.5, 10480.1, 10387.6, 10202.6, 10219.3, 10382.7, 10820.5, 10358.7, 10494.6, 10497.6,"
+"0","  10431.5, 10447.8, 10684.4, 10176.5, 10616.0, 10627.7, 10684.0, 10246.7, 10265.0, 10090.4,"
+"0","  9881.1, 10449.7, 10276.3, 10175.2, 10212.5, 10395.5, 10545.9, 10635.7, 10265.2, 10551.6,"
+"0","  10538.2, 10286.2, 10171.3, 10393.1, 10162.3, 10164.5, 10327.0, 10365.1, 10755.9, 10463.6,"
+"0","  10080.5, 10479.6,  9980.9, 10039.2, 10246.1, 10368.0, 10446.3, 10535.3, 10786.9,  9975.8,"
+"0","  10160.9, 10422.1, 10757.2, 10463.8, 10307.0, 10134.7, 10207.7, 10488.0, 10262.3, 10785.9,"
+"0","  10375.4, 10123.4, 10462.7, 10205.5, 10522.7, 10253.2, 10428.7, 10615.8, 10417.3, 10445.4,"
+"0","  10690.6, 10271.8, 10524.8,  9815.0, 10398.5, 10553.1, 10655.8, 10199.1, 10416.6, 10391.3,"
+"0","  10210.1, 10352.5, 10423.8, 10519.3, 10596.7, 10650.0, 10741.6, 10246.0, 10354.4, 10155.4"
+"0",")"
+"0",""
+"0","# Gráfica de la serie de tiempo"
+"0","ventas_ts = ts(ventas, start = 1, frequency = 1) # Guardamos los datos como una serie de tiempo"
+"0","plot(ventas_ts, main = ""Ventas"","
+"0","     xlab = ""Semana"", ylab = ""Ventas (miles)"","
+"0","     col = ""#F4B4C9"", lwd = 2) "
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","adf.test(ventas_ts) # Prueba de Dickey-Fuller para estacionariedad."
+"1","
+	Augmented Dickey-Fuller Test
+
+data:  ventas_ts
+Dickey-Fuller = -6.2859, Lag order = 4, p-value = 0.01
+alternative hypothesis: stationary
+
+"
+"0","# Revisamos ACF y PACF"
+"0","acf(ventas_ts, main = ""ACF"")"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","pacf(ventas_ts, main = ""PACF"")"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","# Ajustamos un modelo ARIMA automáticamente."
+"0",""
+"0","modelo = Arima(ventas_ts, order = c(3,0,3)) # Seleccionamos Arima"
+"0","#modelo = auto.arima(ventas_ts)"
+"0","summary(modelo)"
+"1","Series: ventas_ts 
+ARIMA(3,0,3) with non-zero mean 
+
+Coefficients:
+         ar1      ar2     ar3      ma1     ma2      ma3        mean
+      1.7218  -1.4351  0.5872  -1.6731  1.2966  -0.6235  10373.7762
+s.e.  0.4589   0.5842  0.2299   0.4487  0.5242   0.1921      3.5664
+
+sigma^2 = 43441:  log likelihood = -808.7
+AIC=1633.4   AICc=1634.7   BIC=1655.7
+
+Training set error measures:
+                   ME     RMSE      MAE         MPE     MAPE      MASE        ACF1
+Training set 1.117581 202.2538 169.5169 -0.02774167 1.634562 0.7174565 -0.02722326
+"
+"0","residuales = as.numeric(modelo$residuals) # Guardamos residuales."
+"0","ajustados = as.numeric(modelo$fitted) # Guardamos valores ajustados."
+"0",""
+"0","# Gráfica de ajustados vs residuales"
+"0","plot(ajustados, residuales, "
+"0","     xlab = ""Valores ajustados"", "
+"0","     ylab = ""Residuales"", "
+"0","     main = ""Residuales vs Ajustados"","
+"0","     pch = 16,  # punto sólido"
+"0","     col = ""#F4B4C9"")"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","abline(h = 0, col = ""#F06292"", lty = 2)"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","checkresiduals(modelo)"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","ad.test(residuales) # Prueba de normalidad para los residuales"
+"1","
+	Anderson-Darling normality test
+
+data:  residuales
+A = 0.42528, p-value = 0.3115
+
+"
+"0","qqnorm(residuales)"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","qqline(residuales, col = ""red"")"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","# Gráfica de la serie de tiempo"
+"0","plot(ventas_ts, main = ""Ventas"","
+"0","     xlab = ""Semana"", ylab = ""Ventas (miles)"","
+"0","     col = ""#F4B4C9"", lwd = 2) "
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","#points(ventas_ts, pch = 16, col = ""#F4B4C9"") # Graficamos los datos con circulos"
+"0",""
+"0","ajustados_ts = ts(ajustados)"
+"0",""
+"0","# Encimamos los valores ajustados."
+"0","lines(ajustados_ts, col = ""#F06292"", lwd = 2)"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","#points(ajustados, col = ""#CE93D8"", lwd = 2, pch = 16)"
+"0",""
+"0","# Añadir leyenda"
+"0","legend(""topleft"", legend = c(""Original"", ""Ajustado""),"
+"0","       col = c(""#F4B4C9"", ""#F06292""), lwd = 2)"
+"2","G1;Error en (function (filename = ""Rplot%03d.png"", width = 480, height = 480, : 
+  unable to start png() device
+Error durante el wrapup: no hay tantas estructuras en la pila
+H1;Errorh: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"

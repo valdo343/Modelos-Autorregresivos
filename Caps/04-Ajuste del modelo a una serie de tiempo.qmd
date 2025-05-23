@@ -1,0 +1,331 @@
+
+
+# Ajuste del modelo a una serie de tiempo
+
+Se utiliza un procedimiento iterativo de tres pasos para construir un
+modelo ARIMA.
+
+1.  Se identifica un modelo tentativo de la clase ARIMA mediante el
+    análisis de datos históricos.
+
+2.  Se estiman los parámetros desconocidos del modelo.
+
+3.  Se realizan comprobaciones diagnósticas para determinar la
+    adecuación del modelo o para indicar posibles mejoras través del
+    análisis de residuos.
+
+## Identificación del Modelo
+
+Los esfuerzos de identificación del modelo deben comenzar con intentos
+preliminares de comprender el tipo de proceso del que provienen los
+datos y cómo se recolectan. Las características percibidas del proceso y
+la frecuencia de muestreo a menudo proporcionan información valiosa en
+esta etapa preliminar de la identificación del modelo. En los entornos
+actuales, ricos en datos, a menudo se espera que los profesionales
+dispongan de “suficientes” datos para poder generar modelos confiables.
+
+Antes de llevar a cabo esfuerzos rigurosos de construcción de modelos
+estadísticos, también se recomienda encarecidamente el uso de gráficos
+“creativos” de los datos, como el simple gráfico de series temporales y
+los diagramas de dispersión de los datos de series temporales $Y_t$
+frente a $Y_{t-1}, Y_{t-2},...$. Los gráficos simples de series de
+tiempo deben usarse como herramienta de evaluación preliminar para la
+estacionariedad. La inspección visual de estos gráficos debería
+confirmarse más adelante como se describió anteriormente en este
+capítulo. Si se sospecha de no estacionariedad, también debe
+considerarse el gráfico de series temporales de la primera (o $d$-ésima)
+diferencia. También se puede realizar la prueba de Dickey y Fuller para
+asegurarse de que efectivamente se necesita la diferenciación. Una vez
+que se puede asumir la estacionariedad, se deben obtener la ACF y PACF
+de la serie temporal original (o de su $d$-ésima diferencia si es
+necesario).
+
+La identificación de modelos ARMA requeriría más cuidado, ya que tanto
+la ACF como la PACF mostrarán una decaimiento exponencial y/o
+comportamiento sinusoidal amortiguado. La identificación del modelo
+ARIMA apropiado requiere habilidades adquiridas por experiencia.
+
+## Estimación de parámetros
+
+Existen varios métodos, como los métodos de momentos, máxima
+verosimilitud y mínimos cuadrados, que pueden emplearse para estimar los
+parámetros en el modelo identificado tentativamente. Sin embargo, a
+diferencia de los modelos de regresión, la mayoría de los modelos ARIMA
+son modelos no lineales y requieren el uso de un procedimiento de ajuste
+no lineal. No obstante, esto generalmente se realiza de manera
+automática mediante paquetes de software sofisticados como Minitab, JMP
+y SAS. En algunos paquetes de software, el usuario puede tener la opción
+de elegir el método de estimación y, en consecuencia, seleccionar el
+método más apropiado según las especificaciones del problema.
+
+## Verificación de Diagnóstico
+
+Después de ajustar un modelo tentativo a los datos, se debe de examinar
+su adecuación y, si es necesario, sugerir posibles mejoras. Esto se hace
+mediante el análisis de residuos. Los residuos para un proceso ARMA
+($p,q$) pueden obtenerse mediante:
+$$ \hat{\varepsilon}_t=Y_t-\left(\hat{\delta}+\sum_{i=1}^p\hat{\phi}_iY_{t-i}-\sum_{i=1}^q\hat{\theta}_i\hat{\varepsilon}_{t-i}\right)$$
+Si el modelo especificado es adecuado y, por lo tanto, se han
+identificado los órdenes apropiados $p$ y $q$ debería transformar las
+observaciones en un proceso de ruido blanco. Así, los residuos en la
+ecuación anterior deberían comportarse como ruido blanco.
+
+Denotemos la función de autocorrelación muestral de los residuos como
+$\{r_e(k)\}$. Si el modelo es apropiado, entonces la función de
+autocorrelación muestral de los residuos no debería presentar estructura
+alguna para identificar. Es decir, la autocorrelación no debería diferir
+significativamente de cero para todos los rezagos mayores que uno.
+
+## Pronósticos de un proceso ARIMA
+
+Una vez que se ha ajustado un modelo de series de tiempo apropiado,
+puede utilizarse para generar pronósticos de observaciones futuras. Si
+denotamos el tiempo actual como $T$, el pronóstico para $Y_{T+\tau}$ se
+llama pronóstico a $\tau-$pasos pasos adelante y se denota como
+$\hat{Y}_{T+\tau}(T)$ El criterio estándar utilizado para obtener el
+mejor pronóstico es el error cuadrático medio, para el cual se minimiza
+el valor esperado del cuadrado de los errores de pronóstico:
+$$ \mathbb{E}[(Y_{T+\tau}-\hat{Y}_{T+\tau}(T))^2]=\mathbb{E}[e_T(\tau)^2].$$
+Se puede demostrar que el mejor pronóstico en el sentido de error
+cuadrático medio es la esperanza condicional de $Y_{T+\tau}$ dado
+$Y_{T},Y-{T-1},...,$ es decir:
+$$ \hat{Y}_{T+\tau}=\mathbb{E}[Y_{T+\tau}|Y_T,Y_{T-1},...].$$
+Consideremos, por ejemplo, un proceso ARIMA($p,d,q$) en el tiempo
+$T+\tau$. Consideremos además su representación MA infinita:
+$$ Y_{T+\tau}=\mu+\sum_{i=1}^\infty \psi_i\varepsilon_{T+\tau-i}. $$
+Podemos particionar la ecuación anterior como
+$$Y_{T+\tau}=\mu+\sum_{i=1}^{\tau-1} \psi_i\varepsilon_{T+\tau-i}+\sum_{i=\tau}^\infty \psi_i\varepsilon_{T+\tau-i}.$$
+
+En esta partición, podemos ver que el componente
+$\sum_{i=1}^{\tau-1} \psi_i\varepsilon_{T+\tau-i}$ involucra errores
+futuros, mientras que el componente
+$\sum_{i=\tau}^\infty \psi_i\varepsilon_{T+\tau-i}$ involucra errores
+presentes y pasados. A partir de la relación entre las observaciones
+actuales y pasadas y los choques aleatorios correspondientes, así como
+el hecho de que se asume que los choques aleatorios tienen media cero y
+son independientes, se puede demostrar que el mejor pronóstico en el
+sentido de error cuadrático medio es:
+$$ \hat{Y}_{T+\tau}=\mathbb{E}[Y_{T+\tau}|Y_T,Y_{T-1},...]=\mu+ \sum_{i=\tau}^\infty \psi_i\varepsilon_{T+\tau-i},$$
+dado que:
+$$ \mathbb{E}[\varepsilon_{T+\tau-i}|Y_T,Y_{T-1},...]=\begin{cases} 0 & \text{si } i < \tau \\ \varepsilon_{T+\tau-i} & \text{si } i\geq\tau \end{cases}. $$
+Posteriormente, el error de pronóstico se calcula a partir de:
+$$e_T(\tau)=Y_{T\tau}-\hat{Y}_{T+\tau}(T)=\sum_{i=0}^{\tau-1}\psi_i\varepsilon_{T+\tau-i}. $$
+
+Dado que el error de pronóstico es una combinación lineal de choques
+aleatorios, tenemos:
+$$\mathbb{E}=(e_T(\tau))=0 \\ Var(e_T(\tau))=\sum_{i=0}^{\tau-1}\psi^2_iVar(\varepsilon_{T+\tau-i})=\sigma^2\sum_{i=0}^{\tau-1}\psi^2=\sigma^2(\tau), \ \ \ \tau=1,2,... .$$
+Debe observarse que la varianza del error de pronóstico aumenta con el
+tiempo de adelanto $\tau$. Esto tiene sentido intuitivamente, ya que
+deberíamos esperar más incertidumbre en nuestros pronósticos cuanto más
+nos alejamos en el futuro. Además, si los choques aleatorios están
+normalmente distribuidos $N(0,\sigma^2)$ entonces los errores de
+pronóstico también estarán distribuidos normalmente como
+$N(0,\sigma^2(\tau))$. Podemos entonces obtener los intervalos de
+predicción al $100(1-\alpha)\%$ para las observaciones futuras a partir
+de:
+$$ \mathbb{P}[\hat{Y}_{T+\tau}(T)-z_{\alpha/2}\sigma(\tau)<Y_{T+\tau}<\hat{Y}_{T+\tau}(T)+z_{\alpha/2}\sigma(\tau)]=1-\alpha,$$
+donde $z_{\alpha/2}$ es el percentil superior $\alpha/2$ de la
+distribución normal estándar. Por lo tanto el intervalo de predicción al
+$100(1-\alpha)\%$ para $Y_{T+\tau}$ es
+$$ \hat{Y}_{T+\tau}(T)\pm z_{\alpha/2}\sigma(\tau).$$
+
+## Ejemplos de ajuste de datos
+
+### Ventas de productos farmacéuticos
+
+El conjunto de datos que estudiaremos en esta sección son ventas de
+productos farmacéuticos en Estados Unidos.
+
+Analizamos la serie de tiempo, así como sus ACF, PACF y su primer
+diferencia.
+
+En base a lo anterior escogeremos un modelo ARIMA a la serie de tiempo.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+#| paged-print: false
+                              ### VENTAS DE FARMACEÚTICOS ###
+
+### Librerías necesarias 
+library(nortest) # Anderson-Darling
+library(forecast) # Librería necesaria para la función Arima
+library(tseries) # Prueba Dickey-Fuller para estacionariedad
+
+ventas = c(
+  10618.1, 10537.9, 10209.3, 10553.0,  9934.9, 10534.5, 10196.5, 10511.8, 10089.6, 10371.2,
+  10239.4, 10472.4, 10827.2, 10640.8, 10517.8, 10154.2,  9969.2, 10260.4, 10737.0, 10430.0,
+  10689.0, 10430.4, 10002.4, 10135.7, 10096.2, 10288.7, 10289.1, 10589.9, 10551.9, 10208.3,
+  10334.5, 10480.1, 10387.6, 10202.6, 10219.3, 10382.7, 10820.5, 10358.7, 10494.6, 10497.6,
+  10431.5, 10447.8, 10684.4, 10176.5, 10616.0, 10627.7, 10684.0, 10246.7, 10265.0, 10090.4,
+  9881.1, 10449.7, 10276.3, 10175.2, 10212.5, 10395.5, 10545.9, 10635.7, 10265.2, 10551.6,
+  10538.2, 10286.2, 10171.3, 10393.1, 10162.3, 10164.5, 10327.0, 10365.1, 10755.9, 10463.6,
+  10080.5, 10479.6,  9980.9, 10039.2, 10246.1, 10368.0, 10446.3, 10535.3, 10786.9,  9975.8,
+  10160.9, 10422.1, 10757.2, 10463.8, 10307.0, 10134.7, 10207.7, 10488.0, 10262.3, 10785.9,
+  10375.4, 10123.4, 10462.7, 10205.5, 10522.7, 10253.2, 10428.7, 10615.8, 10417.3, 10445.4,
+  10690.6, 10271.8, 10524.8,  9815.0, 10398.5, 10553.1, 10655.8, 10199.1, 10416.6, 10391.3,
+  10210.1, 10352.5, 10423.8, 10519.3, 10596.7, 10650.0, 10741.6, 10246.0, 10354.4, 10155.4
+)
+
+# Gráfica de la serie de tiempo
+ventas_ts = ts(ventas, start = 1, frequency = 1) # Guardamos los datos como una serie de tiempo
+plot(ventas_ts, main = "Ventas",
+     xlab = "Semana", ylab = "Ventas (miles)",
+     col = "#F4B4C9", lwd = 2) 
+
+
+adf.test(ventas_ts) # Prueba de Dickey-Fuller para estacionariedad.
+
+# Revisamos ACF y PACF
+acf(ventas_ts, main = "ACF")
+pacf(ventas_ts, main = "PACF")
+
+# Ajustamos un modelo ARIMA automáticamente.
+
+modelo = Arima(ventas_ts, order = c(3,0,3)) # Seleccionamos Arima
+#modelo = auto.arima(ventas_ts)
+summary(modelo)
+
+residuales = as.numeric(modelo$residuals) # Guardamos residuales.
+ajustados = as.numeric(modelo$fitted) # Guardamos valores ajustados.
+
+# Gráfica de ajustados vs residuales
+plot(ajustados, residuales, 
+     xlab = "Valores ajustados", 
+     ylab = "Residuales", 
+     main = "Residuales vs Ajustados",
+     pch = 16,  # punto sólido
+     col = "#F4B4C9")
+abline(h = 0, col = "#F06292", lty = 2)
+
+checkresiduals(modelo)
+ad.test(residuales) # Prueba de normalidad para los residuales
+qqnorm(residuales)
+qqline(residuales, col = "red")
+
+# Gráfica de la serie de tiempo
+plot(ventas_ts, main = "Ventas",
+     xlab = "Semana", ylab = "Ventas (miles)",
+     col = "#F4B4C9", lwd = 2) 
+#points(ventas_ts, pch = 16, col = "#F4B4C9") # Graficamos los datos con circulos
+
+ajustados_ts = ts(ajustados)
+
+# Encimamos los valores ajustados.
+lines(ajustados_ts, col = "#F06292", lwd = 2)
+#points(ajustados, col = "#CE93D8", lwd = 2, pch = 16)
+
+# Añadir leyenda
+legend("topleft", legend = c("Original", "Ajustado"),
+       col = c("#F4B4C9", "#F06292"), lwd = 2)
+```
+
+
+### Producción de Queso y Gorgonzola en EUA
+
+Analizamos un conjunto de datos referente al a producción de queso azul y gorgonzola en Estados Unidos. En la gráfica de la serie de tiempo podremos observar que es evidentemente no estacionaria por lo que un análisis de sus diferencias es crucial.
+
+Estudiaremos sus diferencias rigurosamente buscando volver estacionaria la serie, para finalmente ajustar un modelo ARIMA en base a la información proporcionada por sus ACF y PACF.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+#| paged-print: false
+                                  ### PRODUCCIÓN DE QUESO ###
+
+### Librerías necesarias 
+library(nortest) # Anderson-Darling
+library(forecast) # Librería necesaria para la función Arima
+library(tseries) # Prueba Dickey-Fuller para estacionariedad
+
+queso = c(
+  7657, 5451, 10883, 9554, 9519, 10047, 10663, 10864, 11447, 12710, 
+  15169, 16205, 14507, 15400, 16800, 19000, 20198, 18573, 19375, 21032, 
+  23250, 25219, 28549, 29759,
+  28262, 28506, 33885, 34776, 35347, 34628, 33043, 30214, 31013, 31496, 
+  34115, 33433, 34198, 35863, 37789, 34561, 36434, 34371, 33307, 33295, 
+  36514, 36593, 38311, 42773
+)
+
+# Gráfica de la serie de tiempo
+queso_ts = ts(queso, start = 1950, frequency = 1) # Guardamos los datos como una serie de tiempo
+plot(queso_ts, main = "Producción de queso",
+     xlab = "Año", ylab = "Producción (miles de libras)",
+     col = "#F4B4C9", lwd = 2) 
+#points(queso_ts, pch = 16, col = "#CE93D8") # Graficamos los datos con circulos
+
+########## Revisamos la primer diferencia
+
+# Gráfica de la serie de tiempo
+queso_diff = ts(diff(queso_ts))
+plot(queso_diff, main = "Primera diferencia",
+     xlab = "Diferencia", ylab = "Producción (miles de libras)",
+     col = "#F4B4C9", lwd = 2) 
+#points(queso_diff, pch = 16, col = "#CE93D8") # Graficamos los datos con circulos
+
+
+adf.test(queso_diff) # Prueba de Dickey-Fuller para estacionariedad.
+
+########## Revisamos la segunda diferencia
+
+# Gráfica de la serie de tiempo
+queso_diff2 = ts(diff(queso_diff))
+plot(queso_diff2, main = "Segunda diferencia",
+     xlab = "Diferencia", ylab = "Producción (miles de libras)",
+     col = "#F4B4C9", lwd = 2)
+
+#points(queso_diff2, pch = 16, col = "#CE93D8") # Graficamos los datos con circulos
+
+
+adf.test(queso_diff2) # Prueba de Dickey-Fuller para estacionariedad.
+
+# Revisamos ACF y PACF de la segunda diferencia
+acf(queso_diff2, main = "ACF")
+pacf(queso_diff2, main = "PACF")
+
+# Los correlogramas indican un ARIMA(1,2,1), posiblemente.
+
+# Ajustamos un modelo ARIMA
+
+
+modelo = Arima(queso_ts, order = c(1,2,1)) # Seleccionamos el modelo arima
+#modelo = auto.arima(queso_ts) #Se selecciona el "mejor" arima algorítmicamente.
+summary(modelo)
+
+residuales = as.numeric(modelo$residuals) # Guardamos residuales.
+ajustados = as.numeric(modelo$fitted) # Guardamos valores ajustados.
+
+# Gráfica de ajustados vs residuales
+plot(ajustados, residuales, 
+     xlab = "Valores ajustados", 
+     ylab = "Residuales", 
+     main = "Residuales vs Ajustados",
+     pch = 16,  # punto sólido
+     col = "#F4B4C9")
+
+abline(h = 0, col = "#F06292", lty = 2)
+
+checkresiduals(modelo)
+ad.test(residuales) # Prueba de normalidad para los residuales
+qqnorm(residuales)
+qqline(residuales, col = "red")
+
+# Gráfica de la serie de tiempo
+plot(queso_ts, main = "Producción de queso",
+     xlab = "Año", ylab = "Producción (miles de libras)",
+     col = "#F4B4C9", lwd = 2) 
+#points(queso, pch = 16, col = "#F4B4C9") # Graficamos los datos con circulos
+
+ajustados_ts = ts(ajustados, start = 1950, frequency = 1)
+
+# Encimamos los valores ajustados.
+lines(ajustados_ts, col = "#F06292", lwd = 2)
+#points(ajustados, col = "#CE93D8", lwd = 2, pch = 16)
+
+# Añadir leyenda
+legend("topleft", legend = c("Original", "Ajustado"),
+       col = c("#F4B4C9", "#F06292"), lwd = 2)
+```
+

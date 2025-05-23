@@ -1,0 +1,5 @@
+"0",""
+"0","predic = forecast(modelo,12)"
+"0","plot(predic, col = ""#F06292"", lwd = 2)"
+"2","Error en gzfile(file, ""wb""): no se puede abrir la conexión
+"

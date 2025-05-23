@@ -1,0 +1,15 @@
+"0","#points(az_diff, pch = 16, col = ""#CE93D8"") # Graficamos los datos con circulos"
+"0",""
+"0","adf.test(az_diff) # Prueba de Dickey-Fuller para estacionariedad."
+"1","
+	Augmented Dickey-Fuller Test
+
+data:  az_diff
+Dickey-Fuller = -7.9615, Lag order = 6, p-value = 0.01
+alternative hypothesis: stationary
+
+"
+"0","# Revisamos ACF y PACF de la segunda diferencia"
+"0","acf(az_diff, main = ""ACF"")"
+"2","Error en gzfile(file, ""wb""): no se puede abrir la conexión
+"

@@ -1,0 +1,3 @@
+"0","reales = c(0, 493, 1246, 1428, 1711, 1585, 1587, 1297, 313, 44, 0,133)"
+"0","reales_ts = ts(reales, start = c(2019,1), frequency = 12)"
+"0","lines(reales_ts, col = ""orange"", lwd = 2)"

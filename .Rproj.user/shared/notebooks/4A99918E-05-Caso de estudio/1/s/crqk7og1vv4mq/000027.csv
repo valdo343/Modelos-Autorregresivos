@@ -1,0 +1,5 @@
+"0","#points(ajustados, col = ""#CE93D8"", lwd = 2, pch = 16)"
+"0",""
+"0","# Añadir leyenda"
+"0","legend(""topleft"", legend = c(""Original"", ""Ajustado""),"
+"0","       col = c(""#F4B4C9"", ""#F06292""), lwd = 2)"

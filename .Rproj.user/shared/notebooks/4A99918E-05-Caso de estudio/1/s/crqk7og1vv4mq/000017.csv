@@ -1,0 +1,34 @@
+"0","# Ajustamos un modelo ARIMA"
+"0",""
+"0","modelo = Arima(az, order = c(2,1,2))"
+"0","modelo = auto.arima(az)"
+"0","summary(modelo)"
+"1","Series: az 
+ARIMA(0,1,2) 
+
+Coefficients:
+          ma1      ma2
+      -0.3434  -0.2917
+s.e.   0.0649   0.0684
+
+sigma^2 = 169125:  log likelihood = -1687.67
+AIC=3381.35   AICc=3381.46   BIC=3391.62
+
+Training set error measures:
+                    ME    RMSE      MAE       MPE     MAPE      MASE        ACF1
+Training set -15.69207 408.533 324.3837 -4.777137 16.18093 0.5387357 -0.01066291
+"
+"0","residuales = as.numeric(modelo$residuals) # Guardamos residuales."
+"0","ajustados = as.numeric(modelo$fitted) # Guardamos valores ajustados."
+"0","checkresiduals(modelo)"
+"2","Error en gzfile(file, ""wb""): no se puede abrir la conexión
+"
+"1","
+	Ljung-Box test
+
+data:  Residuals from ARIMA(0,1,2)
+Q* = 26.786, df = 22, p-value = 0.2195
+
+Model df: 2.   Total lags used: 24
+
+"

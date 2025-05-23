@@ -1,0 +1,41 @@
+project:
+  type: book
+
+book:
+  title: "Modelos Autoregresivos"
+  author: "Ale, Oswaldo, Edruan"
+  date: "2025-05-20"
+  chapters:
+    - index.qmd
+    - Caps/01-Introduccion.qmd
+    - Caps/02-Series de Tiempo.qmd
+    - Caps/03-Modelos lineales para series de tiempo estacionarias.qmd
+    - Caps/04-Ajuste del modelo a una serie de tiempo.qmd
+    - Caps/05-Caso de estudio.qmd
+    - references.qmd
+
+bibliography: references.bib
+nocite: |
+  @*
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 3
+    code-fold: true
+    code-summary: "Código"
+    html-math-method:
+      method: mathjax
+      macros:
+        "\\E": "\\mathbb{E}"
+        "\\bm": "\\boldsymbol"
+    lang: es
+
+#  pdf:
+#    documentclass: scrreprt
+

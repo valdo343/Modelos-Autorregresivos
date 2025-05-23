@@ -1,0 +1,152 @@
+
+
+# Ajuste del modelo a una serie de tiempo
+
+Se utiliza un procedimiento iterativo de tres pasos para construir un
+modelo ARIMA.
+
+1.  Se identifica un modelo tentativo de la clase ARIMA mediante el
+    análisis de datos históricos.
+
+2.  Se estiman los parámetros desconocidos del modelo.
+
+3.  Se realizan comprobaciones diagnósticas para determinar la
+    adecuación del modelo o para indicar posibles mejoras través del
+    análisis de residuos.
+
+## Identificación del Modelo
+
+Los esfuerzos de identificación del modelo deben comenzar con intentos
+preliminares de comprender el tipo de proceso del que provienen los
+datos y cómo se recolectan. Las características percibidas del proceso y
+la frecuencia de muestreo a menudo proporcionan información valiosa en
+esta etapa preliminar de la identificación del modelo. En los entornos
+actuales, ricos en datos, a menudo se espera que los profesionales
+dispongan de “suficientes” datos para poder generar modelos confiables.
+
+Antes de llevar a cabo esfuerzos rigurosos de construcción de modelos
+estadísticos, también se recomienda encarecidamente el uso de gráficos
+“creativos” de los datos, como el simple gráfico de series temporales y
+los diagramas de dispersión de los datos de series temporales $Y_t$
+frente a $Y_{t-1}, Y_{t-2},...$. Los gráficos simples de series de
+tiempo deben usarse como herramienta de evaluación preliminar para la
+estacionariedad. La inspección visual de estos gráficos debería
+confirmarse más adelante como se describió anteriormente en este
+capítulo. Si se sospecha de no estacionariedad, también debe
+considerarse el gráfico de series temporales de la primera (o $d$-ésima)
+diferencia. También se puede realizar la prueba de Dickey y Fuller para
+asegurarse de que efectivamente se necesita la diferenciación. Una vez
+que se puede asumir la estacionariedad, se deben obtener la ACF y PACF
+de la serie temporal original (o de su $d$-ésima diferencia si es
+necesario).
+
+La identificación de modelos ARMA requeriría más cuidado, ya que tanto
+la ACF como la PACF mostrarán una decaimiento exponencial y/o
+comportamiento sinusoidal amortiguado. La identificación del modelo
+ARIMA apropiado requiere habilidades adquiridas por experiencia.
+
+## Estimación de parámetros
+
+Existen varios métodos, como los métodos de momentos, máxima
+verosimilitud y mínimos cuadrados, que pueden emplearse para estimar los
+parámetros en el modelo identificado tentativamente. Sin embargo, a
+diferencia de los modelos de regresión, la mayoría de los modelos ARIMA
+son modelos no lineales y requieren el uso de un procedimiento de ajuste
+no lineal. No obstante, esto generalmente se realiza de manera
+automática mediante paquetes de software sofisticados como Minitab, JMP
+y SAS. En algunos paquetes de software, el usuario puede tener la opción
+de elegir el método de estimación y, en consecuencia, seleccionar el
+método más apropiado según las especificaciones del problema.
+
+## Verificación de Diagnóstico
+
+Después de ajustar un modelo tentativo a los datos, se debe de examinar
+su adecuación y, si es necesario, sugerir posibles mejoras. Esto se hace
+mediante el análisis de residuos. Los residuos para un proceso ARMA
+($p,q$) pueden obtenerse mediante:
+$$ \hat{\varepsilon}_t=Y_t-\left(\hat{\delta}+\sum_{i=1}^p\hat{\phi}_iY_{t-i}-\sum_{i=1}^q\hat{\theta}_i\hat{\varepsilon}_{t-i}\right)$$
+Si el modelo especificado es adecuado y, por lo tanto, se han
+identificado los órdenes apropiados $p$ y $q$ debería transformar las
+observaciones en un proceso de ruido blanco. Así, los residuos en la
+ecuación anterior deberían comportarse como ruido blanco.
+
+Denotemos la función de autocorrelación muestral de los residuos como
+$\{r_e(k)\}$. Si el modelo es apropiado, entonces la función de
+autocorrelación muestral de los residuos no debería presentar estructura
+alguna para identificar. Es decir, la autocorrelación no debería diferir
+significativamente de cero para todos los rezagos mayores que uno.
+
+## Pronósticos de un proceso ARIMA
+
+Una vez que se ha ajustado un modelo de series de tiempo apropiado,
+puede utilizarse para generar pronósticos de observaciones futuras. Si
+denotamos el tiempo actual como $T$, el pronóstico para $Y_{T+\tau}$ se
+llama pronóstico a $\tau-$pasos pasos adelante y se denota como
+$\hat{Y}_{T+\tau}(T)$ El criterio estándar utilizado para obtener el
+mejor pronóstico es el error cuadrático medio, para el cual se minimiza
+el valor esperado del cuadrado de los errores de pronóstico:
+$$ \mathbb{E}[(Y_{T+\tau}-\hat{Y}_{T+\tau}(T))^2]=\mathbb{E}[e_T(\tau)^2].$$
+Se puede demostrar que el mejor pronóstico en el sentido de error
+cuadrático medio es la esperanza condicional de $Y_{T+\tau}$ dado
+$Y_{T},Y-{T-1},...,$ es decir:
+$$ \hat{Y}_{T+\tau}=\mathbb{E}[Y_{T+\tau}|Y_T,Y_{T-1},...].$$
+Consideremos, por ejemplo, un proceso ARIMA($p,d,q$) en el tiempo
+$T+\tau$. Consideremos además su representación MA infinita:
+$$ Y_{T+\tau}=\mu+\sum_{i=1}^\infty \psi_i\varepsilon_{T+\tau-i}. $$
+Podemos particionar la ecuación anterior como
+$$Y_{T+\tau}=\mu+\sum_{i=1}^{\tau-1} \psi_i\varepsilon_{T+\tau-i}+\sum_{i=\tau}^\infty \psi_i\varepsilon_{T+\tau-i}.$$
+
+En esta partición, podemos ver que el componente
+$\sum_{i=1}^{\tau-1} \psi_i\varepsilon_{T+\tau-i}$ involucra errores
+futuros, mientras que el componente
+$\sum_{i=\tau}^\infty \psi_i\varepsilon_{T+\tau-i}$ involucra errores
+presentes y pasados. A partir de la relación entre las observaciones
+actuales y pasadas y los choques aleatorios correspondientes, así como
+el hecho de que se asume que los choques aleatorios tienen media cero y
+son independientes, se puede demostrar que el mejor pronóstico en el
+sentido de error cuadrático medio es:
+$$ \hat{Y}_{T+\tau}=\mathbb{E}[Y_{T+\tau}|Y_T,Y_{T-1},...]=\mu+ \sum_{i=\tau}^\infty \psi_i\varepsilon_{T+\tau-i},$$
+dado que:
+$$ \mathbb{E}[\varepsilon_{T+\tau-i}|Y_T,Y_{T-1},...]=\begin{cases} 0 & \text{si } i < \tau \\ \varepsilon_{T+\tau-i} & \text{si } i\geq\tau \end{cases}. $$
+Posteriormente, el error de pronóstico se calcula a partir de:
+$$e_T(\tau)=Y_{T\tau}-\hat{Y}_{T+\tau}(T)=\sum_{i=0}^{\tau-1}\psi_i\varepsilon_{T+\tau-i}. $$
+
+Dado que el error de pronóstico es una combinación lineal de choques
+aleatorios, tenemos:
+$$\mathbb{E}=(e_T(\tau))=0 \\ Var(e_T(\tau))=\sum_{i=0}^{\tau-1}\psi^2_iVar(\varepsilon_{T+\tau-i})=\sigma^2\sum_{i=0}^{\tau-1}\psi^2=\sigma^2(\tau), \ \ \ \tau=1,2,... .$$
+Debe observarse que la varianza del error de pronóstico aumenta con el
+tiempo de adelanto $\tau$. Esto tiene sentido intuitivamente, ya que
+deberíamos esperar más incertidumbre en nuestros pronósticos cuanto más
+nos alejamos en el futuro. Además, si los choques aleatorios están
+normalmente distribuidos $N(0,\sigma^2)$ entonces los errores de
+pronóstico también estarán distribuidos normalmente como
+$N(0,\sigma^2(\tau))$. Podemos entonces obtener los intervalos de
+predicción al $100(1-\alpha)\%$ para las observaciones futuras a partir
+de:
+$$ \mathbb{P}[\hat{Y}_{T+\tau}(T)-z_{\alpha/2}\sigma(\tau)<Y_{T+\tau}<\hat{Y}_{T+\tau}(T)+z_{\alpha/2}\sigma(\tau)]=1-\alpha,$$
+donde $z_{\alpha/2}$ es el percentil superior $\alpha/2$ de la
+distribución normal estándar. Por lo tanto el intervalo de predicción al
+$100(1-\alpha)\%$ para $Y_{T+\tau}$ es
+$$ \hat{Y}_{T+\tau}(T)\pm z_{\alpha/2}\sigma(\tau).$$
+
+## Ejemplos de ajuste de datos
+
+### Ventas de productos farmacéuticos
+
+El conjunto de datos que estudiaremos en esta sección son ventas de
+productos farmacéuticos en Estados Unidos.
+
+Analizamos la serie de tiempo, así como sus ACF, PACF y su primer
+diferencia.
+
+En base a lo anterior escogeremos un modelo ARIMA a la serie de tiempo.
+
+AQUÍ VA EL CÓDIGO DE ESO
+
+### Producción de Queso y Gorgonzola en EUA
+
+Analizamos un conjunto de datos referente al a producción de queso azul y gorgonzola en Estados Unidos. En la gráfica de la serie de tiempo podremos observar que es evidentemente no estacionaria por lo que un análisis de sus diferencias es crucial.
+
+Estudiaremos sus diferencias rigurosamente buscando volver estacionaria la serie, para finalmente ajustar un modelo ARIMA en base a la información proporcionada por sus ACF y PACF.
+
+AQUI VA EL CÓDIGO DE ESO
