@@ -47,10 +47,15 @@ plot(az, main = "Minería mensual de azufre en Guanajuato",
      xlab = "Mes", ylab = "Toneladas",
      col = "#F4B4C9", lwd = 2) 
 #points(az, pch = 16, col = "#CE93D8") # Graficamos los datos con circulos
+```
+Podemos observar que la serie de tiempo decae, lo cual muestra que no es estacionaria en media. Haciendo uso de la prueba aumentada de Dickey-Fuller en efecto obtenemos que no se rechaza la no estacionariedad.
 
+```{r}
 adf.test(az) # Prueba de Dickey-Fuller para estacionariedad.
+```
 
-
+Ahora consideraremos la primera diferencia de la serie de tiempo en busca de que se vuelva estacionaria.
+```{r}
 ########## Revisamos la primer diferencia
 
 az_diff = ts(diff(az))
@@ -60,14 +65,17 @@ plot(az_diff, main = "Primera diferencia",
      xlab = "Diferencia", ylab = "Toneladas",
      col = "#F4B4C9", lwd = 2) 
 #points(az_diff, pch = 16, col = "#CE93D8") # Graficamos los datos con circulos
-
+```
+Gráficamente obtenemos un buen resultado, y al tomar la prueba aumentada de Dickey-Fuller rechazamos la no estacionariedad, indicando que vamos por buen camino y que un modelo ARIMA será el adecuado para nuestra serie de tiempo.
+```{r}
 adf.test(az_diff) # Prueba de Dickey-Fuller para estacionariedad.
 
 # Revisamos ACF y PACF de la segunda diferencia
 acf(az_diff, main = "ACF")
 pacf(az_diff, main = "PACF")
-
-
+```
+Tanto en el correlograma usual como en el correlograma parcial notamos significancia de los segundos lag, por lo que un modelo a considerar es un ARIMA(2,1,2), por lo que lo ajustaremos y procederemos con la evaluación de los residuales.
+```{r}
 # Ajustamos un modelo ARIMA
 
 modelo = Arima(az, order = c(2,1,2))
@@ -94,8 +102,12 @@ abline(h = 0, col = "#F06292", lty = 2)
 ad.test(residuales) # Prueba de normalidad para los residuales
 qqnorm(residuales)
 qqline(residuales, col = "red")
-hist(residuales)
+```
+En lo anterior podemos observar un mal comportamiento de los residuales, y la prueba de Anderson-Darling rechaza la normalidad de los errores. Esto indica que se están violando supuestos sobre los errores en nuestro modelo. Sin embargo, ahora mostramos los valores ajustados y los valores originales, lo cual indica que nuestras predicciones son buenas.
 
+Además, realizamos una predicción de la minería de azufre en el año 2019, y al encimar las observaciones reales (naranja) estas se mantienen dentro de los intervalos de predicción.
+
+```{r}
 # Gráfica de la serie de tiempo
 plot(az, main = "Minería mensual de azufre en Guanajuato",
      xlab = "Mes", ylab = "Toneladas",
@@ -118,4 +130,4 @@ reales = c(0, 493, 1246, 1428, 1711, 1585, 1587, 1297, 313, 44, 0,133)
 reales_ts = ts(reales, start = c(2019,1), frequency = 12)
 lines(reales_ts, col = "orange", lwd = 2)
 ```
-
+A pesar de haber obtenido malos resultados al realizar el diagnóstico del modelo, obtuvimos muy buenas predicciones. En la práctica esto suele ocurrir, y este modelo puede ser bueno dependiendo de lo que se busque a través del ajuste. Si nos interesan las relaciones entre las observaciones (es decir, los parámetros del modelo ARIMA), este modelo podría no ser el indicado; sin embargo, si queremos buenas predicciones, entonces podría ser adecuado.
