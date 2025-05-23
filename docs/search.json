@@ -1,5 +1,55 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Modelos Autoregresivos",
+    "section": "",
+    "text": "Presentación\nProyecto de Estadística de Modelos Autoregresivos.\n\n\n\n\nAbraham, Bovas, y Johannes Ledolter. 1983. Statistical Methods for Forecasting. 1.ª ed. New Jersey: Wiley.\n\n\nCowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. Introductory Time Series with R. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.\n\n\nEnders, Walter. 2015. Applied Econometric Time Series. 1.ª ed. New York: Wiley.\n\n\nHamilton, J. D. 2020. Times series Analysis. 1.ª ed. Wiley.\n\n\nMontgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. Introduction to Time Series Analysis and Forecasting. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.",
+    "crumbs": [
+      "Presentación"
+    ]
+  },
+  {
+    "objectID": "Caps/01-Introduccion.html",
+    "href": "Caps/01-Introduccion.html",
+    "title": "1  Introducción",
+    "section": "",
+    "text": "1.1 Modelos Fundamentales en Series de Tiempo\nEl análisis de series de tiempo es una disciplina estadística clave para estudiar fenómenos dinámicos que evolucionan a lo largo del tiempo. Desde variables económicas como la inflación y la producción industrial, hasta métricas ambientales como las temperaturas globales o el tráfico en redes informáticas, las series de tiempo permiten desentrañar patrones temporales —como tendencias, estacionalidad o ciclos— que son críticos para la toma de decisiones basada en datos.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "Caps/01-Introduccion.html#modelos-fundamentales-en-series-de-tiempo",
+    "href": "Caps/01-Introduccion.html#modelos-fundamentales-en-series-de-tiempo",
+    "title": "1  Introducción",
+    "section": "",
+    "text": "1.1.1 Modelos Autorregresivos (AR)\nLos modelos AR(p) suponen que el valor actual de una serie (\\(x_t\\)) depende linealmente de sus \\(p\\) valores pasados:\n\\[\nx_t = \\alpha_1 x_{t-1} + \\alpha_2 x_{t-2} + \\ldots + \\alpha_p x_{t-p} + \\varepsilon_t,\n\\]\ndonde \\(\\varepsilon_t\\) es ruido blanco. Son ideales para capturar dependencias secuenciales en datos estacionarios.\n\n\n1.1.2 Modelos de Media Móvil (MA)\nLos modelos MA(q) relacionan el valor actual con errores pasados:\n\\[\nx_t = \\varepsilon_t + \\beta_1 \\varepsilon_{t-1} + \\beta_2 \\varepsilon_{t-2} + \\ldots + \\beta_q \\varepsilon_{t-q}.\n\\]\nEstos modelos son útiles para describir impactos temporales de eventos aleatorios.\n\n\n1.1.3 Modelos ARMA: Combinando lo Mejor de AR y MA\nLos modelos ARMA(p, q) integran componentes autorregresivos y de media móvil:\n\\[\nx_t = \\sum_{i=1}^p \\alpha_i x_{t-i} + \\varepsilon_t + \\sum_{j=1}^q \\beta_j \\varepsilon_{t-j}.\n\\]\nSon eficaces para series estacionarias con patrones mixtos de dependencia.\n\n\n1.1.4 Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias\nLos modelos ARIMA(p, d, q) aplican diferenciación (orden \\(d\\)) para convertir series no estacionarias en estacionarias antes de usar ARMA:\n\\[\n(1 - B)^d x_t = \\varepsilon_t + \\sum_{i=1}^p \\alpha_i (1 - B)^d x_{t-i} + \\sum_{j=1}^q \\beta_j \\varepsilon_{t-j},\n\\]\ndonde \\(B\\) es el operador de desplazamiento hacia atrás. Son esenciales para manejar tendencias o varianzas variables.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "Caps/01-Introduccion.html#objetivo-y-estructura-del-documento",
+    "href": "Caps/01-Introduccion.html#objetivo-y-estructura-del-documento",
+    "title": "1  Introducción",
+    "section": "1.2 Objetivo y Estructura del Documento",
+    "text": "1.2 Objetivo y Estructura del Documento\nEste documento profundiza en estos modelos, combinando el rigor teórico de Montgomery, Jennings y Kulahci (2008) con las implementaciones prácticas de Cowpertwait y Metcalfe (2009). La exposición se organiza en cuatro pilares:\n\nFundamentos Teóricos\n\nEstacionariedad, pruebas de Dickey-Fuller y herramientas diagnósticas (ACF, PACF).\n\n\nFormulación Matemática\n\nEcuaciones y propiedades de modelos AR, MA, ARMA y ARIMA.\n\n\nEstimación y Validación\n\nMétodos de máxima verosimilitud, criterios de información (AIC/BIC) y diagnóstico de residuos.\n\n\nAplicaciones Prácticas\n\nCasos de estudio en finanzas (pronóstico de precios), logística (demanda de inventario) y climatología.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "Caps/01-Introduccion.html#relevancia-en-la-era-de-los-datos",
+    "href": "Caps/01-Introduccion.html#relevancia-en-la-era-de-los-datos",
+    "title": "1  Introducción",
+    "section": "1.3 Relevancia en la Era de los Datos",
+    "text": "1.3 Relevancia en la Era de los Datos\nLos modelos de series de tiempo no solo son herramientas académicas: son pilares en predicción de mercados financieros, gestión de recursos energéticos y monitoreo de cambio climático. Su capacidad para descomponer complejidad temporal en componentes interpretables los hace indispensables en un mundo impulsado por datos dinámicos.\n\n\n\n\nAbraham, Bovas, y Johannes Ledolter. 1983. Statistical Methods for Forecasting. 1.ª ed. New Jersey: Wiley.\n\n\nCowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. Introductory Time Series with R. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.\n\n\nEnders, Walter. 2015. Applied Econometric Time Series. 1.ª ed. New York: Wiley.\n\n\nHamilton, J. D. 2020. Times series Analysis. 1.ª ed. Wiley.\n\n\nMontgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. Introduction to Time Series Analysis and Forecasting. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
     "objectID": "Caps/02-Series de Tiempo.html",
     "href": "Caps/02-Series de Tiempo.html",
     "title": "2  Series de Tiempo",
