@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Capítulo 1: Series de Tiempo – Modelos Autoregresivos</title>
+<title>2&nbsp; Series de Tiempo – Modelos Autoregresivos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -164,7 +164,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Caps/02-Series de Tiempo.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Caps/02-Series de Tiempo.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -198,13 +198,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Caps/01-Introduccion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción al Análisis de Series de Tiempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Caps/02-Series de Tiempo.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -311,7 +311,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></h1>
 </div>
 
 
@@ -546,12 +546,8 @@ E(Y_t) = E(\mu + \varepsilon_t) = \mu + E(\varepsilon_t) = \mu + 0 = \mu
 - La serie fluctúa alrededor de una media constante <span class="math inline">\(\mu\)</span>.<br>
 - Ejemplo: Temperatura promedio mensual en una región estable.</p>
 </section>
-<section id="grafica-perrona" class="level4">
-<h4 class="anchored" data-anchor-id="grafica-perrona">grafica perrona</h4>
-<p><em>Figura 1: Serie con media constante (</em><span class="math inline">\(\mu = 50\)</span>) y ruido blanco (<span class="math inline">\(\sigma = 5\)</span>).</p>
-</section>
 <section id="tendencia-lineal-con-ruido-blanco" class="level4">
-<h4 class="anchored" data-anchor-id="tendencia-lineal-con-ruido-blanco">2. Tendencia Lineal con Ruido Blanco</h4>
+<h4 class="anchored" data-anchor-id="tendencia-lineal-con-ruido-blanco">Tendencia Lineal con Ruido Blanco</h4>
 <p><strong>Modelo</strong>:<br>
 <span class="math display">\[
 Y_t = \beta t + \varepsilon_t
@@ -563,10 +559,6 @@ E(Y_t) = E(\beta t + \varepsilon_t) = \beta t + E(\varepsilon_t) = \beta t
 <p><strong>Interpretación</strong>:<br>
 - La media de la serie crece/decrece linealmente con el tiempo.<br>
 - Ejemplo: Ventas anuales de un producto en expansión.</p>
-</section>
-<section id="grafica-perrona-1" class="level4">
-<h4 class="anchored" data-anchor-id="grafica-perrona-1">grafica perrona</h4>
-<p><em>Figura 2: Serie con tendencia lineal (</em><span class="math inline">\(\beta = 2.5\)</span>) y ruido blanco (<span class="math inline">\(\sigma = 10\)</span>).</p>
 </section>
 </section>
 <section id="propiedades-clave" class="level3" data-number="2.4.2">
@@ -619,10 +611,7 @@ Y_{t-j}
 \]</span><br>
 Es la <strong>varianza</strong> de la serie, es decir, la dispersión de <span class="math inline">\(Y_t\)</span> alrededor de su media.</li>
 </ul>
-<section id="ejemplo" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo">Ejemplo</h4>
 <hr>
-</section>
 </section>
 </section>
 <section id="autcorrelación-de-una-serie-de-tiempo" class="level2" data-number="2.6">
@@ -733,10 +722,7 @@ donde <span class="math inline">\(Y_t^*\)</span> y <span class="math inline">\(Y
 <p>La PACF es crítica en modelos autorregresivos (AR). Por ejemplo, en un proceso AR(p):<br>
 - La PACF tiene cortes abruptos en el retardo <span class="math inline">\(p\)</span>.<br>
 - Los valores significativos en <span class="math inline">\(\text{PACF}(k)\)</span> para <span class="math inline">\(k \leq p\)</span> ayudan a determinar el orden del modelo.</p>
-<section id="ejemplo-gráfico" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-gráfico">Ejemplo Gráfico</h4>
 <hr>
-</section>
 </section>
 </section>
 <section id="definición-formal-de-la-autocorrelación-parcial-y-ecuaciones-de-yule-walker" class="level2" data-number="2.9">
@@ -820,7 +806,6 @@ Este valor representa la autocorrelación parcial en el retardo 2, crucial para 
 <ul>
 <li><strong>Corte en la PACF</strong>: En procesos AR(p), la PACF tiene valores significativos hasta el retardo <span class="math inline">\(p\)</span> y luego cae abruptamente.<br>
 </li>
-<li><strong>Ejemplo Gráfico</strong>:</li>
 </ul>
 <p>Esta metodología es fundamental para seleccionar órdenes en modelos autorregresivos y validar supuestos de estacionariedad.</p>
 <hr>
@@ -957,26 +942,20 @@ Aunque las autocovarianzas para <span class="math inline">\(j \neq 0\)</span> so
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-douglass88" class="csl-entry" role="listitem">
-Bates, Douglas M., y Donald G. Watts. 1988. <em>Nonlinear regression analysis and its applications</em>. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+<div id="ref-abraham83" class="csl-entry" role="listitem">
+Abraham, Bovas, y Johannes Ledolter. 1983. <em>Statistical Methods for Forecasting</em>. 1.ª ed. New Jersey: Wiley.
 </div>
-<div id="ref-Garay03082014" class="csl-entry" role="listitem">
-Garay, Aldo M., Víctor H. Lachos, Filidor V. Labra, y Edwin M. M. Ortega and. 2014. <span>«Statistical diagnostics for nonlinear regression models based on scale mixtures of skew-normal distributions»</span>. <em>Journal of Statistical Computation and Simulation</em> 84 (8): 1761-78. <a href="https://doi.org/10.1080/00949655.2013.766188">https://doi.org/10.1080/00949655.2013.766188</a>.
+<div id="ref-cowper09" class="csl-entry" role="listitem">
+Cowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. <em>Introductory Time Series with R</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.
 </div>
-<div id="ref-montgomery92" class="csl-entry" role="listitem">
-Montgomery, Douglas C., Elizabeth A. Peck, y G. Geoffrey Vining. 2012. <em>Introduction to linear regression analysis</em>. 5.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+<div id="ref-enders15" class="csl-entry" role="listitem">
+Enders, Walter. 2015. <em>Applied Econometric Time Series</em>. 1.ª ed. New York: Wiley.
 </div>
-<div id="ref-Ritz2008" class="csl-entry" role="listitem">
-Ritz, Christian, y Jens C. Streibig. 2008. <em>Nonlinear Regression with <span>R</span></em>. Use <span>R!</span> New York: Springer. <a href="https://doi.org/10.1007/978-0-387-09616-2">https://doi.org/10.1007/978-0-387-09616-2</a>.
+<div id="ref-hamilton15" class="csl-entry" role="listitem">
+Hamilton, J. D. 2020. <em>Times series Analysis</em>. 1.ª ed. Wiley.
 </div>
-<div id="ref-ruckstuhl10" class="csl-entry" role="listitem">
-Ruckstuhl, Andreas. 2010. <span>«Introduction to Nonlinear Regression»</span>. IDP Institut für Datenanalyse und Prozessdesign, ZHAW Zürcher Hochschule für Angewandte Wissenschaften.
-</div>
-<div id="ref-Schabenberger2002" class="csl-entry" role="listitem">
-Schabenberger, Oliver, y Francis J. Pierce. 2002. <em>Contemporary Statistical Models for the Plant and Soil Sciences</em>. Taylor &amp; Francis, CRC Press.
-</div>
-<div id="ref-seber03" class="csl-entry" role="listitem">
-Seber, G. A. F, y Wild C. J. 2003. <em>Nonlinear regression</em>. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: John Wiley &amp; Sons.
+<div id="ref-montgomery08" class="csl-entry" role="listitem">
+Montgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. <em>Introduction to Time Series Analysis and Forecasting</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
 </div>
 </div>
 </section>
@@ -1402,8 +1381,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Caps/01-Introduccion.html" class="pagination-link" aria-label="Introducción al Análisis de Series de Tiempo">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción al Análisis de Series de Tiempo</span></span>
+      <a href="../Caps/01-Introduccion.html" class="pagination-link" aria-label="Introducción">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

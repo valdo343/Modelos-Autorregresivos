@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Introducción al Análisis de Series de Tiempo – Modelos Autoregresivos</title>
+<title>1&nbsp; Introducción – Modelos Autoregresivos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -130,7 +130,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Caps/01-Introduccion.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción al Análisis de Series de Tiempo</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Caps/01-Introduccion.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -164,13 +164,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Caps/01-Introduccion.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción al Análisis de Series de Tiempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Caps/02-Series de Tiempo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -209,10 +209,10 @@ window.Quarto = {
   <ul>
   <li><a href="#modelos-fundamentales-en-series-de-tiempo" id="toc-modelos-fundamentales-en-series-de-tiempo" class="nav-link active" data-scroll-target="#modelos-fundamentales-en-series-de-tiempo"><span class="header-section-number">1.1</span> Modelos Fundamentales en Series de Tiempo</a>
   <ul class="collapse">
-  <li><a href="#modelos-autorregresivos-ar" id="toc-modelos-autorregresivos-ar" class="nav-link" data-scroll-target="#modelos-autorregresivos-ar"><span class="header-section-number">1.1.1</span> 1. <strong>Modelos Autorregresivos (AR)</strong></a></li>
-  <li><a href="#modelos-de-media-móvil-ma" id="toc-modelos-de-media-móvil-ma" class="nav-link" data-scroll-target="#modelos-de-media-móvil-ma"><span class="header-section-number">1.1.2</span> 2. <strong>Modelos de Media Móvil (MA)</strong></a></li>
-  <li><a href="#modelos-arma-combinando-lo-mejor-de-ar-y-ma" id="toc-modelos-arma-combinando-lo-mejor-de-ar-y-ma" class="nav-link" data-scroll-target="#modelos-arma-combinando-lo-mejor-de-ar-y-ma"><span class="header-section-number">1.1.3</span> 3. <strong>Modelos ARMA: Combinando lo Mejor de AR y MA</strong></a></li>
-  <li><a href="#modelos-arima-extendiendo-arma-a-series-no-estacionarias" id="toc-modelos-arima-extendiendo-arma-a-series-no-estacionarias" class="nav-link" data-scroll-target="#modelos-arima-extendiendo-arma-a-series-no-estacionarias"><span class="header-section-number">1.1.4</span> 4. <strong>Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias</strong></a></li>
+  <li><a href="#modelos-autorregresivos-ar" id="toc-modelos-autorregresivos-ar" class="nav-link" data-scroll-target="#modelos-autorregresivos-ar"><span class="header-section-number">1.1.1</span> <strong>Modelos Autorregresivos (AR)</strong></a></li>
+  <li><a href="#modelos-de-media-móvil-ma" id="toc-modelos-de-media-móvil-ma" class="nav-link" data-scroll-target="#modelos-de-media-móvil-ma"><span class="header-section-number">1.1.2</span> <strong>Modelos de Media Móvil (MA)</strong></a></li>
+  <li><a href="#modelos-arma-combinando-lo-mejor-de-ar-y-ma" id="toc-modelos-arma-combinando-lo-mejor-de-ar-y-ma" class="nav-link" data-scroll-target="#modelos-arma-combinando-lo-mejor-de-ar-y-ma"><span class="header-section-number">1.1.3</span> <strong>Modelos ARMA: Combinando lo Mejor de AR y MA</strong></a></li>
+  <li><a href="#modelos-arima-extendiendo-arma-a-series-no-estacionarias" id="toc-modelos-arima-extendiendo-arma-a-series-no-estacionarias" class="nav-link" data-scroll-target="#modelos-arima-extendiendo-arma-a-series-no-estacionarias"><span class="header-section-number">1.1.4</span> <strong>Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias</strong></a></li>
   </ul></li>
   <li><a href="#objetivo-y-estructura-del-documento" id="toc-objetivo-y-estructura-del-documento" class="nav-link" data-scroll-target="#objetivo-y-estructura-del-documento"><span class="header-section-number">1.2</span> Objetivo y Estructura del Documento</a></li>
   <li><a href="#relevancia-en-la-era-de-los-datos" id="toc-relevancia-en-la-era-de-los-datos" class="nav-link" data-scroll-target="#relevancia-en-la-era-de-los-datos"><span class="header-section-number">1.3</span> Relevancia en la Era de los Datos</a></li>
@@ -224,7 +224,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción al Análisis de Series de Tiempo</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></h1>
 </div>
 
 
@@ -245,7 +245,7 @@ window.Quarto = {
 <section id="modelos-fundamentales-en-series-de-tiempo" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="modelos-fundamentales-en-series-de-tiempo"><span class="header-section-number">1.1</span> Modelos Fundamentales en Series de Tiempo</h2>
 <section id="modelos-autorregresivos-ar" class="level3" data-number="1.1.1">
-<h3 data-number="1.1.1" class="anchored" data-anchor-id="modelos-autorregresivos-ar"><span class="header-section-number">1.1.1</span> 1. <strong>Modelos Autorregresivos (AR)</strong></h3>
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="modelos-autorregresivos-ar"><span class="header-section-number">1.1.1</span> <strong>Modelos Autorregresivos (AR)</strong></h3>
 <p>Los modelos AR(p) suponen que el valor actual de una serie (<span class="math inline">\(x_t\)</span>) depende linealmente de sus <span class="math inline">\(p\)</span> valores pasados:<br>
 <span class="math display">\[
 x_t = \alpha_1 x_{t-1} + \alpha_2 x_{t-2} + \ldots + \alpha_p x_{t-p} + \varepsilon_t,
@@ -253,7 +253,7 @@ x_t = \alpha_1 x_{t-1} + \alpha_2 x_{t-2} + \ldots + \alpha_p x_{t-p} + \varepsi
 donde <span class="math inline">\(\varepsilon_t\)</span> es ruido blanco. Son ideales para capturar dependencias secuenciales en datos estacionarios.</p>
 </section>
 <section id="modelos-de-media-móvil-ma" class="level3" data-number="1.1.2">
-<h3 data-number="1.1.2" class="anchored" data-anchor-id="modelos-de-media-móvil-ma"><span class="header-section-number">1.1.2</span> 2. <strong>Modelos de Media Móvil (MA)</strong></h3>
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="modelos-de-media-móvil-ma"><span class="header-section-number">1.1.2</span> <strong>Modelos de Media Móvil (MA)</strong></h3>
 <p>Los modelos MA(q) relacionan el valor actual con <strong>errores pasados</strong>:<br>
 <span class="math display">\[
 x_t = \varepsilon_t + \beta_1 \varepsilon_{t-1} + \beta_2 \varepsilon_{t-2} + \ldots + \beta_q \varepsilon_{t-q}.
@@ -261,7 +261,7 @@ x_t = \varepsilon_t + \beta_1 \varepsilon_{t-1} + \beta_2 \varepsilon_{t-2} + \l
 Estos modelos son útiles para describir impactos temporales de eventos aleatorios.</p>
 </section>
 <section id="modelos-arma-combinando-lo-mejor-de-ar-y-ma" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="modelos-arma-combinando-lo-mejor-de-ar-y-ma"><span class="header-section-number">1.1.3</span> 3. <strong>Modelos ARMA: Combinando lo Mejor de AR y MA</strong></h3>
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="modelos-arma-combinando-lo-mejor-de-ar-y-ma"><span class="header-section-number">1.1.3</span> <strong>Modelos ARMA: Combinando lo Mejor de AR y MA</strong></h3>
 <p>Los modelos <strong>ARMA(p, q)</strong> integran componentes autorregresivos y de media móvil:<br>
 <span class="math display">\[
 x_t = \sum_{i=1}^p \alpha_i x_{t-i} + \varepsilon_t + \sum_{j=1}^q \beta_j \varepsilon_{t-j}.
@@ -269,7 +269,7 @@ x_t = \sum_{i=1}^p \alpha_i x_{t-i} + \varepsilon_t + \sum_{j=1}^q \beta_j \vare
 Son eficaces para series <strong>estacionarias</strong> con patrones mixtos de dependencia.</p>
 </section>
 <section id="modelos-arima-extendiendo-arma-a-series-no-estacionarias" class="level3" data-number="1.1.4">
-<h3 data-number="1.1.4" class="anchored" data-anchor-id="modelos-arima-extendiendo-arma-a-series-no-estacionarias"><span class="header-section-number">1.1.4</span> 4. <strong>Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias</strong></h3>
+<h3 data-number="1.1.4" class="anchored" data-anchor-id="modelos-arima-extendiendo-arma-a-series-no-estacionarias"><span class="header-section-number">1.1.4</span> <strong>Modelos ARIMA: Extendiendo ARMA a Series No Estacionarias</strong></h3>
 <p>Los modelos <strong>ARIMA(p, d, q)</strong> aplican diferenciación (orden <span class="math inline">\(d\)</span>) para convertir series no estacionarias en estacionarias antes de usar ARMA:<br>
 <span class="math display">\[
 (1 - B)^d x_t = \varepsilon_t + \sum_{i=1}^p \alpha_i (1 - B)^d x_{t-i} + \sum_{j=1}^q \beta_j \varepsilon_{t-j},
@@ -310,26 +310,20 @@ donde <span class="math inline">\(B\)</span> es el operador de desplazamiento ha
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-douglass88" class="csl-entry" role="listitem">
-Bates, Douglas M., y Donald G. Watts. 1988. <em>Nonlinear regression analysis and its applications</em>. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+<div id="ref-abraham83" class="csl-entry" role="listitem">
+Abraham, Bovas, y Johannes Ledolter. 1983. <em>Statistical Methods for Forecasting</em>. 1.ª ed. New Jersey: Wiley.
 </div>
-<div id="ref-Garay03082014" class="csl-entry" role="listitem">
-Garay, Aldo M., Víctor H. Lachos, Filidor V. Labra, y Edwin M. M. Ortega and. 2014. <span>«Statistical diagnostics for nonlinear regression models based on scale mixtures of skew-normal distributions»</span>. <em>Journal of Statistical Computation and Simulation</em> 84 (8): 1761-78. <a href="https://doi.org/10.1080/00949655.2013.766188">https://doi.org/10.1080/00949655.2013.766188</a>.
+<div id="ref-cowper09" class="csl-entry" role="listitem">
+Cowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. <em>Introductory Time Series with R</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.
 </div>
-<div id="ref-montgomery92" class="csl-entry" role="listitem">
-Montgomery, Douglas C., Elizabeth A. Peck, y G. Geoffrey Vining. 2012. <em>Introduction to linear regression analysis</em>. 5.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+<div id="ref-enders15" class="csl-entry" role="listitem">
+Enders, Walter. 2015. <em>Applied Econometric Time Series</em>. 1.ª ed. New York: Wiley.
 </div>
-<div id="ref-Ritz2008" class="csl-entry" role="listitem">
-Ritz, Christian, y Jens C. Streibig. 2008. <em>Nonlinear Regression with <span>R</span></em>. Use <span>R!</span> New York: Springer. <a href="https://doi.org/10.1007/978-0-387-09616-2">https://doi.org/10.1007/978-0-387-09616-2</a>.
+<div id="ref-hamilton15" class="csl-entry" role="listitem">
+Hamilton, J. D. 2020. <em>Times series Analysis</em>. 1.ª ed. Wiley.
 </div>
-<div id="ref-ruckstuhl10" class="csl-entry" role="listitem">
-Ruckstuhl, Andreas. 2010. <span>«Introduction to Nonlinear Regression»</span>. IDP Institut für Datenanalyse und Prozessdesign, ZHAW Zürcher Hochschule für Angewandte Wissenschaften.
-</div>
-<div id="ref-Schabenberger2002" class="csl-entry" role="listitem">
-Schabenberger, Oliver, y Francis J. Pierce. 2002. <em>Contemporary Statistical Models for the Plant and Soil Sciences</em>. Taylor &amp; Francis, CRC Press.
-</div>
-<div id="ref-seber03" class="csl-entry" role="listitem">
-Seber, G. A. F, y Wild C. J. 2003. <em>Nonlinear regression</em>. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: John Wiley &amp; Sons.
+<div id="ref-montgomery08" class="csl-entry" role="listitem">
+Montgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. <em>Introduction to Time Series Analysis and Forecasting</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
 </div>
 </div>
 </section>
@@ -759,8 +753,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Caps/02-Series de Tiempo.html" class="pagination-link" aria-label="Capítulo 1: Series de Tiempo">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Caps/02-Series de Tiempo.html" class="pagination-link" aria-label="Series de Tiempo">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

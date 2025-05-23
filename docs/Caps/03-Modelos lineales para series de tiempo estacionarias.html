@@ -198,13 +198,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Caps/01-Introduccion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción al Análisis de Series de Tiempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Caps/02-Series de Tiempo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -245,9 +245,6 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#propiedades" id="toc-propiedades" class="nav-link" data-scroll-target="#propiedades"><span class="header-section-number">3.1.1</span> Propiedades:</a></li>
   <li><a href="#modelización-con-ma2" id="toc-modelización-con-ma2" class="nav-link" data-scroll-target="#modelización-con-ma2"><span class="header-section-number">3.1.2</span> Modelización con MA(2)</a></li>
-  <li><a href="#por-qué-ma2-y-no-ma3" id="toc-por-qué-ma2-y-no-ma3" class="nav-link" data-scroll-target="#por-qué-ma2-y-no-ma3"><span class="header-section-number">3.1.3</span> ¿Por qué MA(2) y no MA(3)?</a></li>
-  <li><a href="#por-qué-ma1-y-no-ma2" id="toc-por-qué-ma1-y-no-ma2" class="nav-link" data-scroll-target="#por-qué-ma1-y-no-ma2"><span class="header-section-number">3.1.4</span> ¿Por qué MA(1) y no MA(2)?</a></li>
-  <li><a href="#ventajas-del-modelo-ma1" id="toc-ventajas-del-modelo-ma1" class="nav-link" data-scroll-target="#ventajas-del-modelo-ma1"><span class="header-section-number">3.1.5</span> Ventajas del modelo MA(1)</a></li>
   </ul></li>
   <li><a href="#características-de-los-modelos-maq" id="toc-características-de-los-modelos-maq" class="nav-link" data-scroll-target="#características-de-los-modelos-maq"><span class="header-section-number">3.2</span> Características de los Modelos MA(q)</a>
   <ul class="collapse">
@@ -321,10 +318,7 @@ window.Quarto = {
   <li><a href="#serie-con-tendencia-lineal" id="toc-serie-con-tendencia-lineal" class="nav-link" data-scroll-target="#serie-con-tendencia-lineal"><span class="header-section-number">3.12.1</span> Serie con tendencia lineal</a></li>
   <li><a href="#serie-con-tendencia-cuadrática" id="toc-serie-con-tendencia-cuadrática" class="nav-link" data-scroll-target="#serie-con-tendencia-cuadrática"><span class="header-section-number">3.12.2</span> Serie con tendencia cuadrática</a></li>
   </ul></li>
-  <li><a href="#proceso-autorregresivo-integrado-de-medias-móviles-arima" id="toc-proceso-autorregresivo-integrado-de-medias-móviles-arima" class="nav-link" data-scroll-target="#proceso-autorregresivo-integrado-de-medias-móviles-arima"><span class="header-section-number">3.13</span> Proceso autorregresivo integrado de medias móviles (ARIMA)</a>
-  <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">3.13.1</span> …</a></li>
-  </ul></li>
+  <li><a href="#proceso-autorregresivo-integrado-de-medias-móviles-arima" id="toc-proceso-autorregresivo-integrado-de-medias-móviles-arima" class="nav-link" data-scroll-target="#proceso-autorregresivo-integrado-de-medias-móviles-arima"><span class="header-section-number">3.13</span> Proceso autorregresivo integrado de medias móviles (ARIMA)</a></li>
   </ul>
 </nav>
     </div>
@@ -367,9 +361,6 @@ El efecto de un shock (<span class="math inline">\(\epsilon_t\)</span>) no desap
 Después de <span class="math inline">\(q\)</span> periodos, el impacto del ruido se anula por completo. Esto contrasta con modelos autorregresivos (AR), donde los efectos pueden persistir indefinidamente.<br>
 <em>Ejemplo</em>: En un MA(3), el error <span class="math inline">\(\epsilon_{t-3}\)</span> no influye en <span class="math inline">\(Y_t\)</span>, ya que su efecto termina en <span class="math inline">\(t = 3\)</span>.</p></li>
 </ol>
-<section id="ejemplo-inventario" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-inventario">Ejemplo Inventario</h4>
-</section>
 </section>
 <section id="modelización-con-ma2" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="modelización-con-ma2"><span class="header-section-number">3.1.2</span> Modelización con MA(2)</h3>
@@ -382,33 +373,6 @@ Y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2}
 - <span class="math inline">\(\mu\)</span>: Demanda base constante (sin ofertas).<br>
 - <span class="math inline">\(\epsilon_t\)</span>: Shock por oferta especial en el día <span class="math inline">\(t\)</span> (ruido blanco <span class="math inline">\(\sim N(0, \sigma^2)\)</span>).<br>
 - <span class="math inline">\(\theta_1, \theta_2\)</span>: Coeficientes que miden el impacto residual de la oferta en los días posteriores.</p>
-<section id="ejemplo" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo">Ejemplo</h4>
-</section>
-</section>
-<section id="por-qué-ma2-y-no-ma3" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="por-qué-ma2-y-no-ma3"><span class="header-section-number">3.1.3</span> ¿Por qué MA(2) y no MA(3)?</h3>
-<section id="ejemplo-de-proceso-ma1-contaminación-de-un-río" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-de-proceso-ma1-contaminación-de-un-río">Ejemplo de proceso MA(1): Contaminación de un río</h4>
-<p><strong>Ecuación del modelo</strong>:<br>
-<span class="math display">\[
-Y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1}
-\]</span></p>
-<p><strong>Interpretación</strong>:<br>
-- <span class="math inline">\(Y_t\)</span>: Concentración del contaminante en el día <span class="math inline">\(t\)</span>.<br>
-- <span class="math inline">\(\mu\)</span>: Nivel base de concentración (sin derrames).<br>
-- <span class="math inline">\(\epsilon_t\)</span>: Shock por derrame en el día <span class="math inline">\(t\)</span> (ruido blanco <span class="math inline">\(\sim N(0, \sigma^2)\)</span>).<br>
-- <span class="math inline">\(\theta_1\)</span>: Coeficiente que cuantifica el impacto residual del derrame del día anterior.</p>
-</section>
-<section id="ejemplo-1" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-1">Ejemplo</h4>
-</section>
-</section>
-<section id="por-qué-ma1-y-no-ma2" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="por-qué-ma1-y-no-ma2"><span class="header-section-number">3.1.4</span> ¿Por qué MA(1) y no MA(2)?</h3>
-</section>
-<section id="ventajas-del-modelo-ma1" class="level3" data-number="3.1.5">
-<h3 data-number="3.1.5" class="anchored" data-anchor-id="ventajas-del-modelo-ma1"><span class="header-section-number">3.1.5</span> Ventajas del modelo MA(1)</h3>
 <hr>
 </section>
 </section>
@@ -484,7 +448,6 @@ Y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1}
 <span class="math display">\[
 \rho_j = 0 \quad \text{si } j &gt; q.
 \]</span></p>
-<p><strong>Ejemplo ilustrativo</strong></p>
 </section>
 <section id="casos-particulares" class="level3" data-number="3.3.3">
 <h3 data-number="3.3.3" class="anchored" data-anchor-id="casos-particulares"><span class="header-section-number">3.3.3</span> Casos particulares</h3>
@@ -549,8 +512,8 @@ Los efectos de los shocks se limitan a dos periodos.</p></li>
 </ol>
 </section>
 </section>
-<section id="ejemplo-2" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-2">Ejemplo</h4>
+<section id="ejemplo" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo">Ejemplo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Código</summary>
@@ -598,8 +561,8 @@ Los efectos de los shocks se limitan a dos periodos.</p></li>
 </div>
 </div>
 </section>
-<section id="ejemplo-3" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-3">Ejemplo</h4>
+<section id="ejemplo-1" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-1">Ejemplo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Código</summary>
@@ -677,10 +640,7 @@ Para garantizar que el proceso sea <strong>estacionario en covarianza</strong>, 
 \]</span><br>
 Esta condición asegura que la varianza del proceso sea finita, evitando que las contribuciones acumuladas de los errores pasados divergían.</p></li>
 </ol>
-<section id="ejemplo-4" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-4">Ejemplo</h4>
 <hr>
-</section>
 </section>
 </section>
 <section id="características-de-los-procesos-mainfty" class="level2" data-number="3.5">
@@ -704,7 +664,6 @@ Esta condición asegura que la varianza del proceso sea finita, evitando que las
 \sum_{j=0}^{\infty} \psi_j^2 &lt; \infty.
 \]</span></p>
 <p>Esta condición asegura que los efectos de los shocks pasados no se acumulen indefinidamente, evitando que la varianza diverja.</p>
-<p><strong>Ejemplo ilustrativo</strong></p>
 <hr>
 </section>
 </section>
@@ -789,9 +748,6 @@ donde:<br>
 \]</span><br>
 - <strong>ACF (Función de Autocorrelación)</strong>: Decae lentamente, mostrando dependencias persistentes.<br>
 - <strong>PACF (Función de Autocorrelación Parcial)</strong>: Tiene un pico significativo en <span class="math inline">\(k=1\)</span> y es cero para <span class="math inline">\(k &gt; 1\)</span>.</p>
-</section>
-<section id="ejemplo-5" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-5">Ejemplo</h4>
 </section>
 </section>
 <section id="representación-ma-bajo-estacionariedad" class="level3" data-number="3.7.3">
@@ -894,8 +850,8 @@ Esto implica que las autocorrelaciones decaen <strong>exponencialmente</strong> 
 <span class="math display">\[
 \rho_j = \phi^j \quad \text{para } j \geq 0.
 \]</span></p>
-<section id="ejemplo-6" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-6">Ejemplo</h4>
+<section id="ejemplo-2" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-2">Ejemplo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Código</summary>
@@ -1039,8 +995,8 @@ donde los coeficientes <span class="math inline">\(\psi_j\)</span> son <strong>a
 - Las autocovarianzas <span class="math inline">\(\gamma_j\)</span> dependen únicamente del lag <span class="math inline">\(j\)</span>.<br>
 - La convergencia de <span class="math inline">\(\sum \psi_j^2\)</span> garantiza varianza finita.</p>
 <p>Esta conexión subraya que la estacionariedad del AR(<span class="math inline">\(p\)</span>) está intrínsecamente ligada a la estructura de sus coeficientes y su polinomio característico.</p>
-<section id="ejemplo-7" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-7">Ejemplo</h4>
+<section id="ejemplo-3" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-3">Ejemplo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Código</summary>
@@ -1270,8 +1226,8 @@ Para <span class="math inline">\(k = 0\)</span>, esto se reduce a la varianza pr
 \]</span></p>
 <p>Esta relación refleja que el decaimiento de las autocorrelaciones está gobernado por el coeficiente autorregresivo <span class="math inline">\(\phi\)</span>, independientemente del lag <span class="math inline">\(k\)</span>.</p>
 </section>
-<section id="ejemplo-8" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-8">Ejemplo</h4>
+<section id="ejemplo-4" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-4">Ejemplo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Código</summary>
@@ -1316,8 +1272,8 @@ Para <span class="math inline">\(k = 0\)</span>, esto se reduce a la varianza pr
 </div>
 </div>
 </section>
-<section id="ejemplo-9" class="level4">
-<h4 class="anchored" data-anchor-id="ejemplo-9">Ejemplo</h4>
+<section id="ejemplo-5" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplo-5">Ejemplo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Código</summary>
@@ -1420,35 +1376,26 @@ donde:<br>
 - <span class="math inline">\(\varepsilon_t \sim N(0, \sigma^2)\)</span> es ruido blanco.</p>
 <p>El proceso de modelado implica tres etapas principales: diferenciar la serie <span class="math inline">\(d\)</span> veces para lograr estacionariedad, identificar los órdenes <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> para el modelo ARMA aplicado a la serie diferenciada, y finalmente estimar y validar los parámetros del modelo.</p>
 <p>Este enfoque integra la capacidad de los modelos ARMA para capturar dependencias en series estacionarias, combinándola con la diferenciación para manejar no estacionariedades en los datos originales.</p>
-<section id="section" class="level3" data-number="3.13.1">
-<h3 data-number="3.13.1" class="anchored" data-anchor-id="section"><span class="header-section-number">3.13.1</span> …</h3>
 <hr>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-douglass88" class="csl-entry" role="listitem">
-Bates, Douglas M., y Donald G. Watts. 1988. <em>Nonlinear regression analysis and its applications</em>. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+<div id="ref-abraham83" class="csl-entry" role="listitem">
+Abraham, Bovas, y Johannes Ledolter. 1983. <em>Statistical Methods for Forecasting</em>. 1.ª ed. New Jersey: Wiley.
 </div>
-<div id="ref-Garay03082014" class="csl-entry" role="listitem">
-Garay, Aldo M., Víctor H. Lachos, Filidor V. Labra, y Edwin M. M. Ortega and. 2014. <span>«Statistical diagnostics for nonlinear regression models based on scale mixtures of skew-normal distributions»</span>. <em>Journal of Statistical Computation and Simulation</em> 84 (8): 1761-78. <a href="https://doi.org/10.1080/00949655.2013.766188">https://doi.org/10.1080/00949655.2013.766188</a>.
+<div id="ref-cowper09" class="csl-entry" role="listitem">
+Cowpertwait, Paul S. P., y Andrew V. Metcalfe. 2009. <em>Introductory Time Series with R</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. Baltimore: Springer.
 </div>
-<div id="ref-montgomery92" class="csl-entry" role="listitem">
-Montgomery, Douglas C., Elizabeth A. Peck, y G. Geoffrey Vining. 2012. <em>Introduction to linear regression analysis</em>. 5.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
+<div id="ref-enders15" class="csl-entry" role="listitem">
+Enders, Walter. 2015. <em>Applied Econometric Time Series</em>. 1.ª ed. New York: Wiley.
 </div>
-<div id="ref-Ritz2008" class="csl-entry" role="listitem">
-Ritz, Christian, y Jens C. Streibig. 2008. <em>Nonlinear Regression with <span>R</span></em>. Use <span>R!</span> New York: Springer. <a href="https://doi.org/10.1007/978-0-387-09616-2">https://doi.org/10.1007/978-0-387-09616-2</a>.
+<div id="ref-hamilton15" class="csl-entry" role="listitem">
+Hamilton, J. D. 2020. <em>Times series Analysis</em>. 1.ª ed. Wiley.
 </div>
-<div id="ref-ruckstuhl10" class="csl-entry" role="listitem">
-Ruckstuhl, Andreas. 2010. <span>«Introduction to Nonlinear Regression»</span>. IDP Institut für Datenanalyse und Prozessdesign, ZHAW Zürcher Hochschule für Angewandte Wissenschaften.
-</div>
-<div id="ref-Schabenberger2002" class="csl-entry" role="listitem">
-Schabenberger, Oliver, y Francis J. Pierce. 2002. <em>Contemporary Statistical Models for the Plant and Soil Sciences</em>. Taylor &amp; Francis, CRC Press.
-</div>
-<div id="ref-seber03" class="csl-entry" role="listitem">
-Seber, G. A. F, y Wild C. J. 2003. <em>Nonlinear regression</em>. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: John Wiley &amp; Sons.
+<div id="ref-montgomery08" class="csl-entry" role="listitem">
+Montgomery, Douglas C., Cheryl L. Jennings, y Murat Kulahci. 2008. <em>Introduction to Time Series Analysis and Forecasting</em>. 1.ª ed. Wiley series en probability y mathematical statistics. Applied probability y statistics. New York: Wiley.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1871,8 +1818,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Caps/02-Series de Tiempo.html" class="pagination-link" aria-label="Capítulo 1: Series de Tiempo">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Series de Tiempo</span></span>
+      <a href="../Caps/02-Series de Tiempo.html" class="pagination-link" aria-label="Series de Tiempo">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Series de Tiempo</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
